@@ -1,0 +1,25 @@
+
+untuk push 
+    git push -u origin master
+    ke branch utamaa
+
+    git add . 
+    git commit -m ""
+    git push -u origin master
+
+    git pull origin main
+    git pull
+
+    note: 
+        git commit dulu kalau ada perubahan lokal dan sudah di simpan baru bisa pull
+        biar aman
+
+        kalau mau cek status apa yang terjadi pakai
+        git status
+
+ini yang di ganti
+git remote add origin https://github.com/Juann-E/simdakNest-React.git
+ git push -u origin master
+    git pull origin master
+
+ git yang di pakai repo ku

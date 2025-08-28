@@ -1,0 +1,71 @@
+        memilih nama toko / nama pasar
+        lalu memilih nama barang dimana barang itu adalah barang_pasar_grid
+        (pasar dan barang saling berkaitan(relasi)) lalu memilih tanggal awal dan tanggal akhir untuk jangkauan
+        pengambilan data lalu tipe filenya bisa pdf,excel,chart
+        namun sementara buat dulu menjadi excel biar mudah 
+        dan untuk refrensi format excelnya
+        PASAR BLAURAN TANGGAL : 2025-08-01 - 2025-08-16						
+        DINAS PERDAGANGAN KOTA SALATIGA						
+        No	Bahan Pokok	Satuan	01-08-2025	04-08-2025	05-08-2025	06-08-2025
+        1	Beras IR 64 (kw premium) (Kg)	kg	Rp14.500,00	Rp14.500,00	Rp15.000,00	Rp15.000,00
+        2	Beras IR 64 (kw medium) (Kg)	kg	Rp13.500,00	Rp13.500,00	Rp14.000,00	Rp13.500,00
+        3	Gula Pasir Kristal Putih (kw medium) (Kg)	kg	Rp16.000,00	Rp16.000,00	Rp17.000,00	Rp17.000,00
+
+dan ini table dari database yang ku buat
+
+-- Tabel nama_pasar
+CREATE TABLE nama_pasar (
+    id_pasar INT AUTO_INCREMENT PRIMARY KEY,
+    nama_pasar VARCHAR(100) NOT NULL,
+    alamat TEXT,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabel satuan_barang
+CREATE TABLE satuan_barang (
+    id_satuan INT AUTO_INCREMENT PRIMARY KEY,
+    satuan_barang VARCHAR(50) NOT NULL,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabel nama_barang
+CREATE TABLE nama_barang (
+    id_barang INT AUTO_INCREMENT PRIMARY KEY,
+    nama_barang VARCHAR(100) NOT NULL,
+    id_satuan INT NOT NULL,
+    keterangan TEXT,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_satuan) REFERENCES satuan_barang(id_satuan)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+-- Tabel barang_pasar_grid
+CREATE TABLE barang_pasar_grid (
+    id_barang_pasar INT AUTO_INCREMENT PRIMARY KEY,
+    id_pasar INT NOT NULL,
+    id_barang INT NOT NULL,
+    keterangan TEXT,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pasar) REFERENCES nama_pasar(id_pasar)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (id_barang) REFERENCES nama_barang(id_barang)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+
+-- Tabel harga_barang_pasar
+CREATE TABLE harga_barang_pasar (
+    id_harga INT AUTO_INCREMENT PRIMARY KEY,
+    id_barang_pasar INT NOT NULL,
+    harga DECIMAL(15,2) NOT NULL,
+    keterangan TEXT,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tanggal_harga DATE NOT NULL,
+    FOREIGN KEY (id_barang_pasar) REFERENCES barang_pasar_grid(id_barang_pasar)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+bisakah buat struktur foldernya juga agar mudah di baca

@@ -1,0 +1,90 @@
+D:\00 KULIAH\MAGANG\P1 PERDAGANGAN\REVISI CODE\BACKEND\SRC
+│   app.controller.spec.ts
+│   app.controller.ts
+│   app.module.ts
+│   app.service.ts
+│   main.ts
+│
+├───auth
+│       auth.controller.spec.ts
+│       auth.controller.ts
+│       auth.module.ts
+│       auth.service.spec.ts
+│       auth.service.ts
+│       jwt-auth.guard.ts
+│       jwt.strategy.ts
+│       roles.guard.ts
+│
+├───common
+│   ├───decorators
+│   │       public.decorator.ts
+│   │       roles.decorator.ts
+│   │
+│   ├───dtos
+│   │       create-user.dto.ts
+│   │       login.dto.ts
+│   │
+│   └───enums
+│           user-role.enum.ts
+│
+├───modules
+│   ├───Kepokmas
+│   │   ├───barang-pasar-grid
+│   │   │   │   barang-pasar-grid.controller.ts
+│   │   │   │   barang-pasar-grid.entity.ts
+│   │   │   │   barang-pasar-grid.module.ts
+│   │   │   │   barang-pasar-grid.service.ts
+│   │   │   │
+│   │   │   └───dto
+│   │   │           create-barang-pasar.dto.ts
+│   │   │           update-barang-pasar.dto.ts
+│   │   │
+│   │   ├───harga-barang-grid
+│   │   │   │   harga-barang-pasar.controller.ts
+│   │   │   │   harga-barang-pasar.entity.ts
+│   │   │   │   harga-barang-pasar.module.ts
+│   │   │   │   harga-barang-pasar.service.ts
+│   │   │   │
+│   │   │   └───dto
+│   │   │           create-harga-barang-pasar.dto.ts
+│   │   │           update-harga-barang-pasar.dto.ts
+│   │   │
+│   │   ├───nama-barang
+│   │   │   │   nama-barang.controller.ts
+│   │   │   │   nama-barang.entity.ts
+│   │   │   │   nama-barang.module.ts
+│   │   │   │   nama-barang.service.ts
+│   │   │   │
+│   │   │   └───dto
+│   │   │           create-nama-barang.dto.ts
+│   │   │           update-nama-barang.dto.ts
+│   │   │
+│   │   ├───nama-pasar
+│   │   │   │   nama-pasar.controller.ts
+│   │   │   │   nama-pasar.entity.ts
+│   │   │   │   nama-pasar.module.ts
+│   │   │   │   nama-pasar.service.ts
+│   │   │   │
+│   │   │   └───dto
+│   │   │           create-nama-pasar.dto.ts
+│   │   │           update-nama-pasar.dto.ts
+│   │   │
+│   │   └───satuan-barang
+│   │       │   satuan-barang.controller.ts
+│   │       │   satuan-barang.entity.ts
+│   │       │   satuan-barang.module.ts
+│   │       │   satuan-barang.service.ts
+│   │       │
+│   │       └───dto
+│   │               create-satuan-barang.dto.ts
+│   │               update-satuan-barang.dto.ts
+│   │
+│   └───user
+│           user.controller.ts
+│           user.entity.ts
+│           user.module.ts
+│           user.service.ts
+│
+└───seeds
+        create-admin.seed.txt
+        create-operator.seed.txt

@@ -1,0 +1,93 @@
+database kepokmas
+    nama pasar
+        id pasar (pk)
+        nama pasar
+        alamat
+        time stamp
+
+    satuan barang
+        id satuan (pk)
+        satuan barang
+        time stamp
+
+    nama barang
+        id barang (pk)
+        nama barang
+        satuan barang (fk)
+        keterangan (penjelasan tambahan dari produk (contoh barang))
+        time stamp
+
+    barang pasar grid
+        (memanggil data dari table nama pasar untuk memunculkan semua)
+    dalaman barang pasar grid
+        id barang pasar (pk)
+        id pasar (fk)
+        nama barang (fk)
+        keterangan (penjelasan tambahan dari produk (contoh barang))
+        time stamp
+
+    harga pasar grid
+        (memanggil data dari tale nama pasar untuk memunculkan semua)
+    dalaman harga pasar grid (add harga barang)
+        id harga pasar (pk)
+        id pasar (fk)
+        nama barang (fk)
+        keterangan (penjelasan tambahan dari produk (contoh barang))
+        time stamp
+
+        harga barang per pasar update
+            yang di panggil
+                memanggil semua barang dari pasar tersebut
+                time stamp otomatsi ter isis (bisa durubah) per barang
+                menampilkan harga barang lawas ()
+                isi baranbhg baru di berikan time stamp
+
+        
+
+
+database SPBU
+
+    Kecamatan
+        id_kecamatan (pk)
+        nama Kecamatan
+        keterangan
+
+    kelurahan
+        id_kelurahan (pk)
+        id_kecamatan (fk)
+        nama kelurahan
+        keterangan
+
+    SPBU
+        id_SPBU (PK)
+        no_SPBU 
+        nama kecamatan (fk)
+        nama kelurahan (fk)
+        alamat
+        LATITUDE
+        LONGTITUDE
+        telepon
+        penanggung jawab
+    
+    dokumen SPBU
+        id_dokumenSPBU (pk)
+        id_spbu (fk)
+        id_ref_dSPBU
+        file path
+        akta_pendirian
+        akta_perubahan
+        keterangan akta
+
+    ref_dokuSPBU
+        id_ref_dSPBU (pk)
+        id_dokumenSPBU (fk)
+        nama_jenis_dok
+
+
+    Agen
+        id_agen (pk)
+        nama kecamatan (fk)
+        nama kelurahan (fk)
+        alamat
+        telepon
+        penanggung jawab

@@ -1,0 +1,116 @@
+# PANDUAN INSTALASI SIMDAG PROJECT
+
+## PREREQUISITES
+- Node.js (versi 18 atau lebih baru)
+- MySQL Server
+- Git
+- NPM atau Yarn
+
+## BACKEND SETUP
+     running-nya "npm start" atau pakai file bat nya
+     1. masuk ke folder backend
+     2. npm install -g @nestjs/cli
+     3. nest --version (untuk cek apakah sudah terinstall)
+     4. nest new . --language ts (jika membuat project baru)
+         (pakai npm saja)
+     5. install semua dependency sekaligus:
+         npm install
+         
+     Dependency yang akan terinstall:
+     - Production Dependencies:
+       * @nestjs/common, @nestjs/core, @nestjs/platform-express
+       * @nestjs/jwt, @nestjs/passport, passport, passport-jwt
+       * @nestjs/config, @nestjs/typeorm, typeorm, mysql2
+       * @nestjs/mapped-types, @nestjs/serve-static
+       * bcrypt, class-validator, class-transformer
+       * exceljs, reflect-metadata, rxjs
+       
+     - Development Dependencies:
+       * @nestjs/cli, @nestjs/testing
+       * @types/bcrypt, @types/passport-jwt
+       * @types/express, @types/multer, @types/node
+       * ts-node, typescript, ts-jest
+       * eslint, prettier, jest
+         
+     Note: Semua dependency sudah tercatat di package.json, cukup jalankan 'npm install'
+
+## TROUBLESHOOTING
+
+### Backend Issues:
+- Jika ada error "Module not found": jalankan `npm install` di folder Backend
+- Jika database connection error: periksa konfigurasi .env dan pastikan MySQL server berjalan
+- Jika port 3000 sudah digunakan: ubah PORT di .env atau stop aplikasi yang menggunakan port tersebut
+
+### Frontend Issues:
+- Jika ada error saat npm run dev: hapus folder node_modules dan jalankan `npm install` ulang
+- Jika port 5173 sudah digunakan: Vite akan otomatis menggunakan port lain
+- Jika ada error TypeScript: pastikan semua @types packages sudah terinstall
+
+### General:
+- Pastikan Node.js versi 18+
+- Gunakan terminal/cmd sebagai administrator jika ada permission error
+- Jika masih ada masalah, coba hapus node_modules dan package-lock.json, lalu npm install ulang
+
+## DATABASE & ENVIRONMENT SETUP
+    1. buat database MySQL dengan nama sesuai project
+    2. copy file .env.example ke .env (jika ada) atau buat file .env baru
+    3. isi konfigurasi database di file .env:
+        DB_HOST=localhost
+        DB_PORT=3306
+        DB_USERNAME=your_username
+        DB_PASSWORD=your_password
+        DB_DATABASE=your_database_name
+        JWT_SECRET=your_jwt_secret
+        AES_KEY=your_aes_key
+
+## GENERATE SECRET KEYS
+    1. buka cmd/terminal
+    2. pastikan nodejs sudah terinstall
+    3. generate JWT secret:
+        node -e "console.log(require('crypto').randomBytes(20).toString('base64'))"
+    4. generate AES key:
+        node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+        
+## DATABASE MIGRATION/SEEDING
+    1. npx ts-node src/seeds/create-admin.seed.ts
+        note: ganti create-admin.seed.ts dengan file yang ingin di migrate
+        
+## MENJALANKAN APLIKASI
+    Backend: npm start (di folder Backend)
+    Frontend: npm run dev (di folder Frontend)
+    
+    Backend akan berjalan di: http://localhost:3000
+    Frontend akan berjalan di: http://localhost:5173
+
+## FRONTEND SETUP
+     1. masuk ke folder frontend
+     2. npm create vite@latest . -- --template react-ts (jika membuat project baru)
+     3. pilih typescript + swc
+     4. install semua dependency sekaligus:
+         npm install
+         
+     Dependency yang akan terinstall:
+     - Production Dependencies:
+       * react, react-dom, react-is
+       * react-router-dom (untuk routing)
+       * axios (untuk HTTP requests)
+       * react-select (untuk dropdown components)
+       * react-leaflet, leaflet (untuk maps)
+       * lucide-react (untuk icons)
+       * recharts (untuk charts/graphs)
+       
+     - Development Dependencies:
+       * @vitejs/plugin-react, vite
+       * @types/react, @types/react-dom, @types/leaflet
+       * typescript, typescript-eslint
+       * tailwindcss, autoprefixer, postcss (untuk styling)
+       * eslint, eslint plugins
+         
+     5. setup tailwindcss (jika belum ada config):
+         npx tailwindcss init -p
+         
+     6. running aplikasi:
+         npm run dev (untuk development)
+         atau gunakan yarn dev.bat
+         
+     Note: Semua dependency sudah tercatat di package.json, cukup jalankan 'npm install'

@@ -1,0 +1,52 @@
+import { DataSource } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { User, UserRole } from '../modules/user/user.entity';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+const AppDataSource = new DataSource({
+  type: 'mysql',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  entities: [User],
+  synchronize: false,
+});
+
+async function createOperator() {
+  await AppDataSource.initialize();
+
+  // Cek apakah operator sudah ada
+  const existingOperator = await AppDataSource.manager.findOne(User, {
+    where: { username: 'operator' },
+  });
+
+  if (existingOperator) {
+    console.log(' Operator user already exists');
+    await AppDataSource.destroy();
+    return;
+  }
+
+  // Buat password
+  const hashedPassword = await bcrypt.hash('123', 10);
+
+  // Buat user operator
+  const operator = new User();
+  operator.username = 'operator';
+  operator.password = hashedPassword;
+  operator.role = UserRole.OPERATOR;
+  operator.email = 'operator@example.com';
+
+  await AppDataSource.manager.save(operator);
+  console.log(' Operator user created');
+
+  await AppDataSource.destroy();
+}
+
+createOperator().catch((err) => {
+  console.error('Error creating operator:', err);
+  process.exit(1);
+});

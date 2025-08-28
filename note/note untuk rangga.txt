@@ -1,0 +1,120 @@
+saran untuk bbm LPG DB
+    Jenis bbm
+        id_jenis_bnm
+        jenis bbm
+        keterangan
+
+    realisasi Bulanan LPG
+        id_Realisasi_LPG
+        agen (fk) -> diambil dari table agen
+        keterangan
+    
+    Realisasi Bulanan BBM
+        id_Realisasi_BBM
+        Nama_SPBU (fk) -> diambil dari table spbu
+        no_spbu (fk) -> diambil dari tabel spbu
+        keterangan
+
+Breakdown cara kerja
+
+    Report Agen LPG
+        pilih bulan dan tahun
+        yang tersedia pilihan adalah excel 
+        untuk excel
+
+        Excel (format table nya) -> untuk bulanan
+
+            PENYALURAN LPG 3 KG			
+            BULAN APRIL TAHUN 2022			
+            NO	NAMA AGEN	ALAMAT	Realisasi Penyaluran (tabung)
+            1	PT.EHSAN MULTI ENERGI	Perum Dliko Indah	19.76
+            2	PT.Berlian Putra Mandiri	Jl.Lingkar Selatan Salatiga	31.36
+
+        Excel (format tabelnya) -> untuk tahunan
+
+            PENYALURAN LPG 3 KG (Tabung)															
+            TAHUN 2022															
+            NO	NAMA AGEN	ALAMAT	JANUARI	FEBRUARI	MARET	APRIL	MEI	JUNI	JULI	AGUSTUS	SEPTEMBER	OKTOBER	NOVEMBER	DESEMBER	TOTAL
+            1	PT. Rakyat Makmur Nusantara	Jl. Buksuling No. 16 RT 08/IV Kutowinangun	61.96	57.24	64.92	65.28	63.24	61.96	62.68	64.36	61.92	64.2	63.08	71.12	761.96
+            2	PT. Catur Karya	Jl. Ahmad Yani No. 96	49.6	45.88	51.6	49.6	49.6	49.6	49.6	51.6	49.64	49.6	49.64	51.48	597.44
+            3	PT. Pelita Tri Migas	Jl. Diponegoro 147, RT 04 / 12	44.24	40.88	46.14	45.72	43.12	43.68	44.04	46.08	44.24	43.68	44.24	3.448	489.508
+
+        jika ingin dijadikan chart (optional)
+            X: bulan
+            Y: Jumlah realisasi
+
+    Report BBM
+        pilih bulan dan tahun
+        yang tersedia pilihan adalah excel 
+        untuk excel
+
+        Excel (format table nya) -> untuk bulanan
+
+        PENYALURAN BAHAN BAKAR MINYAK				
+        BULAN MEI TAHUN 2022				
+        NO	NOMOR SPBU	ALAMAT	JENIS BBM	Realisasi Penyaluran (liter)
+        1	44.507.04	Jl. Soekarno - Hatta	PERTALITE	340.564
+                                                PERTAMAX	90.034
+                                                BIO SOLAR	113.985
+                                                DEXLITE	    17.044
+        2	44.507.05	Jl. Diponegoro No 173	PERTALITE	276.063
+                                                PERTAMAX	42.303
+                                                BIO SOLAR	69.504
+                                                DEXLITE	    4.983
+        3	44.507.06	Jl. Veteran No. 139	PERTALITE	362.537
+                                            PERTAMAX	73.992
+                                            BIO SOLAR	69.62
+                                            PERTAMINA DEX	5.347
+        4	44.507.11	Jl. Imam Bonjol No. 27 RT 04 RW 08	PERTALITE	444.64
+                                                            PERTAMAX	83.469
+                                                            BIO SOLAR	104.186
+                                                            DEXLITE 	5.868
+
+        Excel (format tabelnya) -> untuk tahunan
+
+        PENYALURAN BAHAN BAKAR MINYAK (LITER)																
+        TAHUN 2022																
+        NO	NOMOR SPBU	ALAMAT	JENIS BBM	JANUARI	FEBRUARI	MARET	APRIL	MEI	JUNI	JULI	AGUSTUS	SEPTEMBER	OKTOBER	NOVEMBER	DESEMBER	TOTAL
+        1	44.507.04	Jl. Soekarno - Hatta	PREMIUM	107.167	111.31	117.043	88.234	113.985	167.376	237.859	249.851	188.65	195.462	182.136	189.582	1.948.655
+                                                BIO SOLAR	303.019	251.499	292.135	310.636	340.564	323.828	363.51	348.76	267.381	295.065	296.981	322.747	3.716.125
+                                                PERTALITE	119.435	110.298	133.242	91.328	90.034	73.617	80.317	76.505	83.548	86.078	86.668	94.984	1.126.054
+                                                PERTAMAX	20.746	16.109	17.603	15.25	17.044	15.235	17.252	16.048	15.207	14.224	12.951	15.873	193.542
+                                                PERTAMAX PLUS													
+                                                PERTAMINA DEX													
+                                                SOLAR NON SUBSIDI													
+                                                DEXLITE													
+                                                PERTAMAX TURBO													
+        2	44.507.05	Jl. Diponegoro No 173	PREMIUM	73.154	57.054	75.241	66.034	69.504	79.512	73.561	87.455	88.338	88.873	99.005	99.185	956.916
+                                                BIO SOLAR	236.766	198.502	223.584	230.971	276.063	265.851	287.611	287.185	191.098	211.612	204.538	226.988	2.840.769
+                                                PERTALITE	62.253	50.636	64.121	41.729	42.303	34.509	40.064	40.612	47.051	45.059	45.807	45.776	559.92
+                                                PERTAMAX	5.889	1.99	4.471	3.098	4.983	4.179	3.623	2.138	13.282	4.846	2.789	3.666	54.954
+                                                PERTAMAX PLUS													
+                                                PERTAMINA DEX													
+                                                SOLAR NON SUBSIDI													
+                                                DEXLITE													
+                                                PERTAMAX TURBO													
+        3	44.507.06	Jl. Veteran No. 139	PREMIUM	69.602	56.356	84.38	67.891	69.62	79.209	115.695	146.053	97.557	98.399	99.449	100.653	1.084.864
+                                            BIO SOLAR	220.974	207.145	246.603	326.748	362.537	329.513	316.09	322.303	316.276	333.981	307.309	308.098	3.597.577
+                                            PERTALITE	162.054	124.15	144.143	72.418	73.992	57.484	72.525	71.541	63.743	67.073	73.134	76.184	1.058.441
+                                            PERTAMAX	3.994	2.737	3.428	3.582	5.347	5.244	4.153	3.28	3.819	4.519	4.364	5.863	50.33
+                                            PERTAMAX PLUS													
+                                            PERTAMINA DEX													
+                                            SOLAR NON SUBSIDI													
+                                            DEXLITE													
+                                            PERTAMAX TURBO													
+
+        lalu di bagian paling bawah diberikan 
+        	
+            BIO SOLAR	19.981.708
+            PERTALITE	39.658.562
+            PERTAMAX	8.279.282
+            PERTAMINA DEX	268.271
+            DEXLITE	    614.074
+            PERTAMAX TURBO	283.918
+
+
+
+        jika ingin dijadikan chart (optional)
+            nama spbu, lalu dibuat chart 
+            X: bulan
+            Y: Jumlah realisasi per jenis bbm (jadi ada beberapa garis dalam 1 chart)
