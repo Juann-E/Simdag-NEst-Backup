@@ -4,16 +4,19 @@ saran untuk bbm LPG DB
         jenis bbm
         keterangan
 
-    realisasi Bulanan LPG
+    realisasi Bulanan LPG --> (jangan pula berikan tabel agen)
         id_Realisasi_LPG
-        agen (fk) -> diambil dari table agen
-        keterangan
+        nama agen (fk) -> diambil dari table agen
+        tanggal (bulan+tahun)
+        Realisasi Tabung
     
     Realisasi Bulanan BBM
         id_Realisasi_BBM
         Nama_SPBU (fk) -> diambil dari table spbu
         no_spbu (fk) -> diambil dari tabel spbu
-        keterangan
+        tanggal (bulan+tahun)
+        jenis_bbm (fk) -> diambil dari jenis bbm
+        Realisasi_liter
 
 Breakdown cara kerja
 
