@@ -281,25 +281,18 @@ export default function RealisasiBbmDetail() {
   return (
     <>
       <div className="mt-6 bg-white p-6 rounded-lg shadow-sm border">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/admin/bbm-lpg/realisasi-bbm')}
-              className="flex items-center text-gray-600 hover:text-gray-800"
-            >
-              <ArrowLeft size={20} className="mr-2" />
-              Kembali
-            </button>
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                <Fuel size={20} className="mr-2" />
-                Detail Realisasi BBM
-              </h2>
-              <p className="text-sm text-gray-500">
-                {realisasiData.spbu.nama_usaha} - {realisasiData.spbu.no_spbu}
-              </p>
-            </div>
+        <button
+          onClick={() => navigate('/admin/bbm-lpg/realisasi-bulanan-bbm')}
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline mb-4"
+        >
+          <ArrowLeft size={16} />
+          Kembali ke Realisasi Bulanan BBM
+        </button>
+        
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Detail Realisasi BBM: {realisasiData.spbu.nama_usaha}</h2>
+            <p className="text-sm text-gray-500">Kelola data realisasi bulanan untuk SPBU ini - {realisasiData.spbu.no_spbu}</p>
           </div>
           <button
             onClick={handleOpenAddModal}

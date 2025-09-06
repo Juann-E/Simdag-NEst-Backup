@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { TrendingUp, TrendingDown, ArrowLeft } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowLeft, Calendar } from 'lucide-react';
 
 const API_BASE_URL = 'http://localhost:3000';
 
@@ -33,6 +33,17 @@ export default function MarketDetailPage() {
   const [marketName, setMarketName] = useState('');
   const [commodityList, setCommodityList] = useState<CommodityData[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // State untuk date picker
+  const [firstDate, setFirstDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
+  const [secondDate, setSecondDate] = useState(() => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toISOString().split('T')[0];
+  });
 
   const numericMarketId = parseInt(marketId || '0', 10);
 
@@ -49,8 +60,10 @@ export default function MarketDetailPage() {
           setMarketName(currentMarket.nama_pasar);
         }
 
-        // const pricesRes = await axios.get(`${API_BASE_URL}/public/prices/market/${numericMarketId}`);
-        const pricesRes = await axios.get<CommodityData[]>(`${API_BASE_URL}/public/prices/market/${numericMarketId}`);
+        // Gunakan endpoint baru dengan parameter tanggal
+        const pricesRes = await axios.get<CommodityData[]>(
+          `${API_BASE_URL}/public/prices/market/${numericMarketId}/dates?firstDate=${firstDate}&secondDate=${secondDate}`
+        );
         setCommodityList(pricesRes.data);
 
       } catch (error) {
@@ -62,7 +75,7 @@ export default function MarketDetailPage() {
     };
     
     fetchDetailData();
-  }, [numericMarketId]);
+  }, [numericMarketId, firstDate, secondDate]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -73,6 +86,37 @@ export default function MarketDetailPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800">Analisis Perbandingan Harian</h1>
         <p className="text-2xl text-gray-500 mt-2">{marketName || 'Memuat...'}</p>
+      </div>
+      
+      {/* Date Picker Section */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="flex items-center justify-center gap-8">
+          <div className="flex flex-col items-center">
+            <label className="text-sm font-medium text-gray-700 mb-2">Tanggal Pertama</label>
+            <div className="relative">
+              <input
+                type="date"
+                value={firstDate}
+                onChange={(e) => setFirstDate(e.target.value)}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white"
+              />
+            </div>
+          </div>
+          
+          <div className="text-gray-400 text-2xl font-bold">=</div>
+          
+          <div className="flex flex-col items-center">
+            <label className="text-sm font-medium text-gray-700 mb-2">Tanggal Kedua</label>
+            <div className="relative">
+              <input
+                type="date"
+                value={secondDate}
+                onChange={(e) => setSecondDate(e.target.value)}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       
       {loading ? (
@@ -110,11 +154,11 @@ export default function MarketDetailPage() {
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Hari Ini:</span>
+                      <span className="text-gray-500">{new Date(firstDate).toLocaleDateString('id-ID')}:</span>
                       <span className="font-medium">{item.priceToday > 0 ? formatCurrency(item.priceToday) : '-'}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Kemarin:</span>
+                      <span className="text-gray-500">{new Date(secondDate).toLocaleDateString('id-ID')}:</span>
                       <span className="font-medium">{item.priceYesterday > 0 ? formatCurrency(item.priceYesterday) : '-'}</span>
                     </div>
                     <div className="flex justify-between">

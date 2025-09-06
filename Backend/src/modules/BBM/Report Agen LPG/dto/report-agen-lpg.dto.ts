@@ -5,6 +5,7 @@ export class ReportAgenLpgDto {
 
 export class ReportAgenLpgYearlyDto {
   tahun: number;
+  kuota_mt: number;
 }
 
 export enum ReportType {

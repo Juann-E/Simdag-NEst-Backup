@@ -116,6 +116,51 @@ export class PublicService {
   }
 
   /**
+   * Mengambil data harga berdasarkan dua tanggal tertentu untuk pasar tertentu.
+   */
+  async findPricesForMarketByDates(marketId: number, firstDate: string, secondDate: string) {
+    const allPrices = await this.hargaRepo.find({
+      where: { barangPasar: { pasar: { id: marketId } } },
+      relations: ['barangPasar', 'barangPasar.barang', 'barangPasar.barang.satuan', 'barangPasar.pasar'],
+      order: { tanggal_harga: 'DESC' },
+    });
+    
+    const commodityMap = new Map<string, any>();
+    allPrices.forEach(p => {
+      const itemName = p.barangPasar.barang.namaBarang;
+      const priceDate = new Date(p.tanggal_harga).toISOString().split('T')[0];
+      if (!commodityMap.has(itemName)) {
+        commodityMap.set(itemName, {
+          name: itemName,
+          unit: p.barangPasar.barang.satuan?.satuanBarang || 'N/A',
+          gambar: p.barangPasar.barang.gambar,
+          priceToday: 0,
+          priceYesterday: 0,
+        });
+      }
+      const commodity = commodityMap.get(itemName)!;
+      if (priceDate === firstDate && commodity.priceToday === 0) commodity.priceToday = p.harga;
+      if (priceDate === secondDate && commodity.priceYesterday === 0) commodity.priceYesterday = p.harga;
+    });
+    
+    // Jika tidak ada data untuk salah satu tanggal, cari data terdekat
+    commodityMap.forEach(commodity => {
+      if (commodity.priceToday === 0 || commodity.priceYesterday === 0) {
+        // Cari harga terdekat jika tidak ada data pada tanggal yang diminta
+        const nearestPrices = allPrices.filter(p => p.barangPasar.barang.namaBarang === commodity.name);
+        if (commodity.priceToday === 0 && nearestPrices.length > 0) {
+          commodity.priceToday = nearestPrices[0].harga;
+        }
+        if (commodity.priceYesterday === 0 && nearestPrices.length > 1) {
+          commodity.priceYesterday = nearestPrices[1].harga;
+        }
+      }
+    });
+    
+    return Array.from(commodityMap.values());
+  }
+
+  /**
    * Mengambil data yang sudah diproses untuk chart global (tanpa filter pasar).
    */
   async getChartData() {

@@ -34,6 +34,16 @@ export class PublicController {
   }
 
   @Public()
+  @Get('prices/market/:marketId/dates')
+  findPricesForMarketByDates(
+    @Param('marketId') marketId: number,
+    @Query('firstDate') firstDate: string,
+    @Query('secondDate') secondDate: string
+  ) {
+    return this.publicService.findPricesForMarketByDates(+marketId, firstDate, secondDate);
+  }
+
+  @Public()
   @Get('chart-data')
   getChartData(
     @Query('marketId') marketId?: string,

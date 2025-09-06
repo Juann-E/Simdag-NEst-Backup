@@ -115,7 +115,7 @@ export class ReportAgenLpgService {
   }
 
   async generateYearlyReport(dto: ReportAgenLpgYearlyDto): Promise<{ buffer: Buffer; fileName: string }> {
-    const { tahun } = dto;
+    const { tahun, kuota_mt } = dto;
 
     // Ambil semua agen
     const allAgen = await this.agenRepo.find({
@@ -166,32 +166,59 @@ export class ReportAgenLpgService {
     worksheet.getRow(1).alignment = { horizontal: 'center' };
     worksheet.getRow(2).alignment = { horizontal: 'center' };
 
-    // Merge cells untuk header
-    worksheet.mergeCells('A1:O1');
-    worksheet.mergeCells('A2:O2');
+    // Merge cells untuk header utama
+    worksheet.mergeCells('A1:P1');
+    worksheet.mergeCells('A2:P2');
 
-    // Header tabel
-    const headerRow = worksheet.addRow([
-      'NO', 'NAMA AGEN', 'ALAMAT', 
-      'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
-      'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER',
-      'TOTAL'
+    // Header tabel dengan struktur sesuai gambar
+    // Baris pertama header - kolom utama
+    const headerRow1 = worksheet.addRow([
+      'NO', 'NAMA AGEN', 'AMAT AGEN', 
+      'PENYALURAN (TABUNG)', '', '', '', '', '',
+      '', '', '', '', '', '', 'TOTAL'
     ]);
-    headerRow.font = { bold: true };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFE0E0E0' }
-    };
     
-    // Add borders to header
-    headerRow.eachCell((cell) => {
-      cell.border = {
-        top: { style: 'thick' },
-        left: { style: 'thick' },
-        bottom: { style: 'thick' },
-        right: { style: 'thick' }
+    // Baris kedua header - bulan-bulan
+    const headerRow2 = worksheet.addRow([
+      '', '', '',
+      'JAN', 'FEB', 'MAR', 'APRIL', 'MEI', 'JUNI',
+      'JULI', 'AGTS', 'SEP', 'OKT', 'NOV', 'DES', ''
+    ]);
+    
+    // Merge cells untuk header utama
+    worksheet.mergeCells('A4:A5'); // NO
+    worksheet.mergeCells('B4:B5'); // NAMA AGEN
+    worksheet.mergeCells('C4:C5'); // AMAT AGEN
+    worksheet.mergeCells('D4:O4'); // PENYALURAN (TABUNG)
+    worksheet.mergeCells('P4:P5'); // TOTAL
+    
+    // Style untuk header
+    [headerRow1, headerRow2].forEach(row => {
+      row.font = { bold: true };
+      row.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE0E0E0' }
       };
+      
+      // Add borders to header
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: 'thick' },
+          left: { style: 'thick' },
+          bottom: { style: 'thick' },
+          right: { style: 'thick' }
+        };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      });
+    });
+
+    // Prepare monthly totals untuk summary rows
+    const monthlyTotals = Array(12).fill(0);
+    agenDataMap.forEach((agenData) => {
+      agenData.monthly.forEach((value, index) => {
+        monthlyTotals[index] += value;
+      });
     });
 
     // Data rows
@@ -201,8 +228,8 @@ export class ReportAgenLpgService {
         rowIndex++,
         agenData.nama_usaha,
         agenData.alamat,
-        ...agenData.monthly.map(val => val > 0 ? val.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 3 }) : '0'),
-        agenData.total > 0 ? agenData.total.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 3 }) : '0'
+        ...agenData.monthly.map(val => val > 0 ? val.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : ''),
+        agenData.total > 0 ? agenData.total.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : ''
       ];
       const addedRow = worksheet.addRow(row);
       
@@ -214,136 +241,43 @@ export class ReportAgenLpgService {
           bottom: { style: 'thin' },
           right: { style: 'thin' }
         };
+        // Center align numeric data
+        if (typeof cell.col === 'number' && cell.col >= 4) {
+          cell.alignment = { horizontal: 'center', vertical: 'middle' };
+        }
       });
     });
-
-    // Auto-fit columns
-    worksheet.getColumn(1).width = 5;  // NO
-    worksheet.getColumn(2).width = 25; // Nama agen
-    worksheet.getColumn(3).width = 30; // Alamat
-    worksheet.getColumn(4).width = 10; // Jan
-    worksheet.getColumn(5).width = 10; // Feb
-    worksheet.getColumn(6).width = 10; // Mar
-    worksheet.getColumn(7).width = 10; // Apr
-    worksheet.getColumn(8).width = 10; // Mei
-    worksheet.getColumn(9).width = 10; // Jun
-    worksheet.getColumn(10).width = 10; // Jul
-    worksheet.getColumn(11).width = 10; // Agu
-    worksheet.getColumn(12).width = 10; // Sep
-    worksheet.getColumn(13).width = 10; // Okt
-    worksheet.getColumn(14).width = 10; // Nov
-    worksheet.getColumn(15).width = 10; // Des
-    worksheet.getColumn(16).width = 12; // Total
-
-    // Prepare chart data - aggregate monthly totals
-    const monthlyTotals = Array(12).fill(0);
-    agenDataMap.forEach((agenData) => {
-      agenData.monthly.forEach((value, index) => {
-        monthlyTotals[index] += value;
-      });
-    });
-
-    // Create chart data area in the same worksheet (to the right of the table)
-    const chartDataStartRow = 4; // Start after header
-    const chartDataStartCol = 18; // Column R (after the main table)
     
-    // Add chart data headers
-    worksheet.getCell(chartDataStartRow, chartDataStartCol).value = 'Bulan';
-    worksheet.getCell(chartDataStartRow, chartDataStartCol + 1).value = 'Total Realisasi';
+    // Add summary rows sesuai gambar
+    const totalRealisasiRow = worksheet.addRow([
+      '', 'TOTAL REALISASI', '',
+      ...monthlyTotals.map(val => val > 0 ? val.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : ''),
+      monthlyTotals.reduce((sum, val) => sum + val, 0).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    ]);
     
-    // Style chart data headers
-    const chartHeaderCell1 = worksheet.getCell(chartDataStartRow, chartDataStartCol);
-    const chartHeaderCell2 = worksheet.getCell(chartDataStartRow, chartDataStartCol + 1);
-    [chartHeaderCell1, chartHeaderCell2].forEach(cell => {
-      cell.font = { bold: true };
-      cell.fill = {
+    // Add kuota and sisa kuota rows
+    const kuotaTabung = (kuota_mt * 1000) / 3; // Rumus: (input_mt * 1000) / 3
+    const kuotaLpgRow = worksheet.addRow([
+      '', `KUOTA LPG 3 KG DI KOTA SALATIGA (${kuota_mt} MT)`, '',
+      '', '', '', '', '', '', '', '', '', '', '', '', 
+      kuotaTabung.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    ]);
+    
+    const sisaKuotaRow = worksheet.addRow([
+      '', `SISA KUOTA LPG TAHUN ${tahun}`, '',
+      '', '', '', '', '', '', '', '', '', '', '', '',
+      (kuotaTabung - monthlyTotals.reduce((sum, val) => sum + val, 0)).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    ]);
+    
+    // Style summary rows
+    [totalRealisasiRow, kuotaLpgRow, sisaKuotaRow].forEach(row => {
+      row.font = { bold: true };
+      row.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFE0E0E0' }
+        fgColor: { argb: 'FFFFFF00' } // Yellow background
       };
-      cell.border = {
-        top: { style: 'thick' },
-        left: { style: 'thick' },
-        bottom: { style: 'thick' },
-        right: { style: 'thick' }
-      };
-    });
-    
-    const monthNames = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
-    
-    // Add monthly data for chart
-    monthNames.forEach((month, index) => {
-      const currentRow = chartDataStartRow + 1 + index;
-      worksheet.getCell(currentRow, chartDataStartCol).value = month;
-      worksheet.getCell(currentRow, chartDataStartCol + 1).value = monthlyTotals[index];
       
-      // Add borders to data cells
-      const cell1 = worksheet.getCell(currentRow, chartDataStartCol);
-      const cell2 = worksheet.getCell(currentRow, chartDataStartCol + 1);
-      [cell1, cell2].forEach(cell => {
-        cell.border = {
-          top: { style: 'thin' },
-          left: { style: 'thin' },
-          bottom: { style: 'thin' },
-          right: { style: 'thin' }
-        };
-      });
-    });
-
-    // Set column widths for chart data
-    worksheet.getColumn(chartDataStartCol).width = 15; // Bulan
-    worksheet.getColumn(chartDataStartCol + 1).width = 15; // Total Realisasi
-
-    // Add summary section below the main table like in the image
-    const mainTableEndRow = worksheet.rowCount;
-    const chartDataEndRow = chartDataStartRow + 12; // 12 months
-    
-    // Add some space between table and summary
-    worksheet.addRow([]);
-    worksheet.addRow([]);
-    
-    // Calculate summary data like in the image
-    const totalRealisasi = monthlyTotals.reduce((sum, val) => sum + val, 0);
-    const kuotaLpg = totalRealisasi * 1.2; // Assume kuota is 120% of realisasi
-    const sisaKuota = kuotaLpg - totalRealisasi;
-
-    // Add summary title
-    const summaryTitleRow = worksheet.addRow([`REKAPITULASI PENYALURAN LPG 3 kg TAHUN ${tahun} (TABUNG)`]);
-    summaryTitleRow.font = { bold: true, size: 14 };
-    summaryTitleRow.alignment = { horizontal: 'center' };
-    worksheet.mergeCells(`A${summaryTitleRow.number}:P${summaryTitleRow.number}`);
-    
-    worksheet.addRow([]);
-    
-    // Create summary data table
-    const summaryHeaderRow = worksheet.addRow(['KATEGORI', 'JUMLAH (TABUNG)']);
-    summaryHeaderRow.font = { bold: true };
-    summaryHeaderRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFE0E0E0' }
-    };
-    
-    // Add borders to summary header
-    summaryHeaderRow.eachCell((cell) => {
-      cell.border = {
-        top: { style: 'thick' },
-        left: { style: 'thick' },
-        bottom: { style: 'thick' },
-        right: { style: 'thick' }
-      };
-    });
-    
-    // Add summary data rows
-    const totalRealisasiRow = worksheet.addRow(['TOTAL REALISASI', totalRealisasi.toLocaleString('id-ID')]);
-    const kuotaLpgRow = worksheet.addRow([`KUOTA LPG 3 KG DI KOTA SALATIGA (${Math.round(kuotaLpg/1000)} MT)`, kuotaLpg.toLocaleString('id-ID')]);
-    const sisaKuotaRow = worksheet.addRow([`SISA KUOTA LPG TAHUN ${tahun}`, sisaKuota.toLocaleString('id-ID')]);
-    
-    // Add borders to summary data rows
-    [totalRealisasiRow, kuotaLpgRow, sisaKuotaRow].forEach(row => {
       row.eachCell((cell) => {
         cell.border = {
           top: { style: 'thin' },
@@ -351,20 +285,29 @@ export class ReportAgenLpgService {
           bottom: { style: 'thin' },
           right: { style: 'thin' }
         };
+        if (typeof cell.col === 'number' && cell.col >= 4) {
+          cell.alignment = { horizontal: 'center', vertical: 'middle' };
+        }
       });
     });
-    
-    // Set column widths for summary
-    worksheet.getColumn(1).width = Math.max(worksheet.getColumn(1).width || 0, 40); // KATEGORI
-    worksheet.getColumn(2).width = Math.max(worksheet.getColumn(2).width || 0, 20); // JUMLAH
-    
-    // Add note about chart visualization
-    worksheet.addRow([]);
-    const noteRow = worksheet.addRow(['Catatan: Untuk visualisasi grafik 3D seperti pada gambar, silakan buat chart manual di Excel dengan data summary di atas.']);
-    noteRow.font = { italic: true, size: 10 };
-    noteRow.alignment = { horizontal: 'left', wrapText: true };
-    worksheet.mergeCells(`A${noteRow.number}:P${noteRow.number}`);
-    worksheet.getRow(noteRow.number).height = 30;
+
+    // Auto-fit columns sesuai dengan format gambar
+    worksheet.getColumn(1).width = 5;  // NO
+    worksheet.getColumn(2).width = 25; // NAMA AGEN
+    worksheet.getColumn(3).width = 15; // AMAT AGEN
+    worksheet.getColumn(4).width = 8;  // JAN
+    worksheet.getColumn(5).width = 8;  // FEB
+    worksheet.getColumn(6).width = 8;  // MAR
+    worksheet.getColumn(7).width = 8;  // APRIL
+    worksheet.getColumn(8).width = 8;  // MEI
+    worksheet.getColumn(9).width = 8;  // JUNI
+    worksheet.getColumn(10).width = 8; // JULI
+    worksheet.getColumn(11).width = 8; // AGTS
+    worksheet.getColumn(12).width = 8; // SEP
+    worksheet.getColumn(13).width = 8; // OKT
+    worksheet.getColumn(14).width = 8; // NOV
+    worksheet.getColumn(15).width = 8; // DES
+    worksheet.getColumn(16).width = 12; // TOTAL
 
     // Generate buffer
     const buffer = await workbook.xlsx.writeBuffer();

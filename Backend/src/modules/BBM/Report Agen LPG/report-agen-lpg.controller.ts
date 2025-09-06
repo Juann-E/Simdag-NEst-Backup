@@ -36,11 +36,13 @@ export class ReportAgenLpgController {
   @Get('download-yearly')
   async downloadYearlyReport(
     @Query('year') year: string,
+    @Query('kuota_mt') kuota_mt: string,
     @Res() res: Response,
   ) {
     try {
       const dto: ReportAgenLpgYearlyDto = {
         tahun: parseInt(year),
+        kuota_mt: parseFloat(kuota_mt),
       };
 
       const { buffer, fileName } = await this.reportAgenLpgService.generateYearlyReport(dto);

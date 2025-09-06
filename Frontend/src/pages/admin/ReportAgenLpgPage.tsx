@@ -10,6 +10,7 @@ interface MonthlyReportForm {
 
 interface YearlyReportForm {
   year: string;
+  kuota_mt: string;
 }
 
 export default function ReportAgenLpgPage() {
@@ -20,7 +21,8 @@ export default function ReportAgenLpgPage() {
     monthYear: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
   });
   const [yearlyForm, setYearlyForm] = useState<YearlyReportForm>({
-    year: new Date().getFullYear().toString()
+    year: new Date().getFullYear().toString(),
+    kuota_mt: ''
   });
   const [isDownloadingMonthly, setIsDownloadingMonthly] = useState(false);
   const [isDownloadingYearly, setIsDownloadingYearly] = useState(false);
@@ -69,11 +71,17 @@ export default function ReportAgenLpgPage() {
   // Download yearly Excel report
   const downloadYearlyExcel = async () => {
     try {
+      // Validasi input kuota metrik ton
+      if (!yearlyForm.kuota_mt || parseFloat(yearlyForm.kuota_mt) <= 0) {
+        alert('Mohon masukkan kuota metrik ton yang valid (lebih dari 0)');
+        return;
+      }
+      
       setIsDownloadingYearly(true);
       const token = localStorage.getItem('accessToken');
       
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-yearly?year=${parseInt(yearlyForm.year)}`,
+        `http://localhost:3000/public/report-agen-lpg/download-yearly?year=${parseInt(yearlyForm.year)}&kuota_mt=${parseFloat(yearlyForm.kuota_mt)}`,
         {
           responseType: 'blob',
           headers: {
@@ -104,8 +112,8 @@ export default function ReportAgenLpgPage() {
     setMonthlyForm({ monthYear: value });
   };
 
-  const handleYearlyFormChange = (value: string) => {
-    setYearlyForm({ year: value });
+  const handleYearlyFormChange = (field: string, value: string) => {
+    setYearlyForm(prev => ({ ...prev, [field]: value }));
   };
   
   // Fungsi untuk mengubah tab dan navigasi
@@ -193,14 +201,14 @@ export default function ReportAgenLpgPage() {
             Download laporan agen LPG tahunan dalam format Excel dengan breakdown per bulan untuk setiap agen.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Tahun
               </label>
               <select
                 value={yearlyForm.year}
-                onChange={(e) => handleYearlyFormChange(e.target.value)}
+                onChange={(e) => handleYearlyFormChange('year', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {Array.from({ length: 10 }, (_, i) => {
@@ -212,6 +220,21 @@ export default function ReportAgenLpgPage() {
                   );
                 })}
               </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Kuota Metrik Ton <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="Contoh: 9901"
+                value={yearlyForm.kuota_mt}
+                onChange={(e) => handleYearlyFormChange('kuota_mt', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
             
             <div>
