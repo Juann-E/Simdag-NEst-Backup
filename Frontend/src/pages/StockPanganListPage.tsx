@@ -50,9 +50,9 @@ export default function StockPanganListPage() {
         {/* === BAGIAN PETA LOKASI === */}
         <section className="container mx-auto px-4 sm:px-6 py-8">
           <div className="text-center space-y-4 mb-12">
-            <h3 className="text-4xl font-bold text-gray-800">Peta Lokasi Distributor</h3>
+            <h3 className="text-4xl font-bold text-gray-800">Peta Lokasi Toko Besar</h3>
             <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-              Lihat persebaran lokasi distributor stock pangan yang telah terintegrasi dengan sistem kami.
+              Lihat persebaran lokasi toko besar stock pangan yang telah terintegrasi dengan sistem kami.
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export default function StockPanganListPage() {
             <div className="text-center space-y-4 mb-12">
               <h3 className="text-4xl font-bold text-gray-800">Analisis Tren Stock Pangan</h3>
               <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-                Pantau perkembangan stock pangan dari berbagai distributor.
+                Pantau perkembangan stock pangan dari berbagai toko besar.
               </p>
             </div>
             <div className="mb-8 bg-white rounded-lg p-4 w-full">
@@ -90,15 +90,15 @@ export default function StockPanganListPage() {
         </section>
         {/* === AKHIR BAGIAN GRAFIK STOCK PANGAN === */}
 
-        {/* === BAGIAN DAFTAR DISTRIBUTOR === */}
+        {/* === BAGIAN DAFTAR TOKO BESAR === */}
         <section className="flex-shrink-0 container mx-auto px-4 py-16 mt-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-800">Daftar Distributor Stock Pangan</h1>
-            <p className="text-lg text-gray-500 mt-2">Klik distributor untuk melihat perkembangan stock bulanan.</p>
+            <h1 className="text-4xl font-bold text-gray-800">Daftar Toko Besar Stock Pangan</h1>
+            <p className="text-lg text-gray-500 mt-2">Klik toko besar untuk melihat perkembangan stock bulanan.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {loading ? (
-              <p className="col-span-full text-center text-gray-500">Memuat data distributor...</p>
+              <p className="col-span-full text-center text-gray-500">Memuat data toko besar...</p>
             ) : (
               distributors.map((distributor) => (
                 <Link
@@ -109,7 +109,7 @@ export default function StockPanganListPage() {
                   <div className="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
                     <div className="text-white text-center">
                       <div className="text-6xl mb-2">🏢</div>
-                      <div className="text-lg font-semibold">Distributor</div>
+                      <div className="text-lg font-semibold">Toko Besar</div>
                     </div>
                   </div>
                   <div className="p-6">
@@ -129,7 +129,7 @@ export default function StockPanganListPage() {
             )}
           </div>
         </section>
-        {/* === AKHIR BAGIAN DAFTAR DISTRIBUTOR === */}
+        {/* === AKHIR BAGIAN DAFTAR TOKO BESAR === */}
       </div>
 
       <Footer />

@@ -31,6 +31,10 @@ import { AgenModule } from './modules/SPBU_LPG/Agen/agen.module';
 import { PangkalanLpgModule } from './modules/SPBU_LPG/PangkalanLpg/pangkalan-lpg.module';
 import { SpbeModule } from './modules/SPBU_LPG/Spbe/spbe.module';
 
+// BBM Modules
+import { BbmModule } from './modules/BBM/bbm.module';
+import { ReportAgenLpgModule } from './modules/BBM/Report Agen LPG/report-agen-lpg.module';
+
 // Stock Pangan Modules
 import { StockPanganModule } from './modules/stock-pangan/stock-pangan.module';
 
@@ -88,6 +92,10 @@ import { PublicModule } from './common/public/public.module';
     AgenModule,
     PangkalanLpgModule,
     SpbeModule,
+
+    // BBM Modules
+    BbmModule,
+    ReportAgenLpgModule,
 
     // Stock Pangan Modules
     StockPanganModule,

@@ -25,7 +25,12 @@ export const API_CONFIG = {
     SPBU: '/spbu',
     AGEN: '/agen',
     PANGKALAN_LPG: '/pangkalan-lpg',
-    SPBE: '/spbe'
+    SPBE: '/spbe',
+    
+    // BBM endpoints
+    JENIS_BBM: '/jenis-bbm',
+    REALISASI_BULANAN_LPG: '/realisasi-bulanan-lpg',
+    REALISASI_BULANAN_BBM: '/realisasi-bulanan-bbm'
   }
 };
 

@@ -10,6 +10,7 @@ import MapSection from "../components/MapSection"
 import PriceChart from "../components/PriceChart"
 import StockPanganChart from "../components/StockPanganChart"
 import StockPanganSection from "../components/StockPanganSection"
+import LpgBbmChart from "../components/charts/LpgBbmChart"
 import Footer from "../components/Footer"
 
 // Pastikan URL ini sesuai dengan alamat backend Anda
@@ -25,17 +26,38 @@ interface Market {
   longitude?: number
 }
 
+interface Item {
+  id: number
+  namaBarang: string
+  satuan?: {
+    satuanBarang: string
+  }
+}
+
 export default function MarketListPage() {
   const [markets, setMarkets] = useState<Market[]>([])
+  const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
+  
+  // State untuk PriceChart
+  const [chartData, setChartData] = useState<any[]>([])
+  const [chartLines, setChartLines] = useState<{ key: string; color: string }[]>([])
+  const [chartLoading, setChartLoading] = useState(true)
+  const [selectedMarketId, setSelectedMarketId] = useState<string>('')
+  const [selectedItemId, setSelectedItemId] = useState<string>('')
 
   useEffect(() => {
-    const fetchMarkets = async () => {
+    const fetchData = async () => {
       setLoading(true)
       try {
-        const response = await axios.get(`${API_BASE_URL}/public/markets`)
+        // Ambil data pasar dan items secara bersamaan
+        const [marketsResponse, itemsResponse] = await Promise.all([
+          axios.get(`${API_BASE_URL}/public/markets`),
+          axios.get(`${API_BASE_URL}/public/items`)
+        ])
 
-        const marketsWithImages = response.data.map((market: Market) => {
+        // Proses data pasar
+        const marketsWithImages = marketsResponse.data.map((market: Market) => {
           let imageUrl = "/default-market.jpg" // Gambar default jika tidak ada gambar
           if (market.gambar) {
             // Membersihkan path gambar dari backend
@@ -46,14 +68,59 @@ export default function MarketListPage() {
         })
 
         setMarkets(marketsWithImages)
+        setItems(itemsResponse.data)
+        
       } catch (error) {
-        console.error("Gagal mengambil data pasar:", error)
+        console.error("Gagal mengambil data:", error)
+        setMarkets([])
+        setItems([])
       } finally {
         setLoading(false)
       }
     }
-    fetchMarkets()
+    fetchData()
   }, [])
+
+  // useEffect terpisah untuk mengambil data chart berdasarkan selectedItemId dan selectedMarketId
+  useEffect(() => {
+    const fetchChartData = async () => {
+      setChartLoading(true)
+      try {
+        // Buat URL dengan parameter berdasarkan pilihan user
+        let chartUrl = `${API_BASE_URL}/public/chart-data`
+        const params = new URLSearchParams()
+        
+        if (selectedItemId) {
+          params.append('itemId', selectedItemId)
+        }
+        if (selectedMarketId) {
+          params.append('marketId', selectedMarketId)
+        }
+        
+        if (params.toString()) {
+          chartUrl += `?${params.toString()}`
+        }
+        
+        const chartResponse = await axios.get(chartUrl)
+        
+        // Gunakan data chart yang sudah diproses dari backend
+        const { chartData, chartLines } = chartResponse.data || { chartData: [], chartLines: [] }
+        setChartData(chartData)
+        setChartLines(chartLines)
+        
+      } catch (error) {
+        console.error("Gagal mengambil data chart:", error)
+        // Set default values jika terjadi error
+        setChartData([])
+        setChartLines([])
+      } finally {
+        setChartLoading(false)
+      }
+    }
+    fetchChartData()
+  }, [selectedMarketId, selectedItemId])
+
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -66,7 +133,7 @@ export default function MarketListPage() {
         </div>
 
         {/* === BAGIAN PETA LOKASI === */}
-        <section className="flex-shrink-0 container mx-auto px-4 sm:px-6 py-12 mt-8">
+        <section id="peta-lokasi" className="flex-shrink-0 container mx-auto px-4 sm:px-6 py-12 mt-8">
           <div className="text-center space-y-4 mb-12">
             <h3 className="text-4xl font-bold text-gray-800">Peta Lokasi</h3>
             <p className="text-xl text-gray-500 max-w-3xl mx-auto">
@@ -93,16 +160,26 @@ export default function MarketListPage() {
         {/* === AKHIR BAGIAN PETA === */}
 
         {/* === BAGIAN GRAFIK HARGA === */}
-        <section className="flex-shrink-0 w-full bg-white border-t border-gray-200 mt-12">
+        <section id="grafik-statistik" className="flex-shrink-0 w-full bg-white border-t border-gray-200 mt-12">
           <div className="container mx-auto px-4 sm:px-6 py-16">
             <div className="text-center space-y-4 mb-12">
               <h3 className="text-4xl font-bold text-gray-800">Analisis Tren Harga Komoditas</h3>
               <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-                Pilih pasar pada grafik di bawah untuk melihat tren harga.
+                Pilih komoditas dan pasar pada grafik di bawah untuk melihat tren harga spesifik.
               </p>
             </div>
             <div className="mb-8 bg-white rounded-lg p-4 w-full">
-              <PriceChart />
+              <PriceChart
+                data={chartData}
+                lines={chartLines}
+                markets={markets}
+                items={items}
+                selectedMarketId={selectedMarketId}
+                selectedItemId={selectedItemId}
+                onMarketChange={(e) => setSelectedMarketId(e.target.value)}
+                onItemChange={(e) => setSelectedItemId(e.target.value)}
+                loading={chartLoading}
+              />
             </div>
           </div>
         </section>
@@ -114,7 +191,7 @@ export default function MarketListPage() {
             <div className="text-center space-y-4 mb-12">
               <h3 className="text-4xl font-bold text-gray-800">Tren Stock Komoditas Pangan</h3>
               <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-                Pantau pergerakan stock komoditas pangan berdasarkan data transaksi distributor.
+                Pantau pergerakan stock komoditas pangan berdasarkan data transaksi toko besar.
               </p>
             </div>
             <div className="mb-8 bg-white rounded-lg p-4 w-full">
@@ -124,8 +201,33 @@ export default function MarketListPage() {
         </section>
         {/* === AKHIR BAGIAN GRAFIK STOCK PANGAN === */}
 
+        {/* === BAGIAN GRAFIK LPG DAN BBM === */}
+        <section className="flex-shrink-0 w-full bg-white border-t border-gray-200 mt-12">
+          <div className="container mx-auto px-4 sm:px-6 py-16">
+            <div className="text-center space-y-4 mb-12">
+              <h3 className="text-4xl font-bold text-gray-800">Realisasi Bulanan LPG dan BBM</h3>
+              <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+                Pantau realisasi distribusi LPG dan BBM dari berbagai agen dan SPBU.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <LpgBbmChart 
+                type="lpg" 
+                title="Realisasi Bulanan LPG"
+                className=""
+              />
+              <LpgBbmChart 
+                type="bbm" 
+                title="Realisasi Bulanan BBM"
+                className=""
+              />
+            </div>
+          </div>
+        </section>
+        {/* === AKHIR BAGIAN GRAFIK LPG DAN BBM === */}
+
         {/* === BAGIAN DAFTAR PASAR === */}
-        <section className="flex-shrink-0 container mx-auto px-4 py-16 mt-8">
+        <section id="daftar-pasar" className="flex-shrink-0 container mx-auto px-4 py-16 mt-8">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-800">Daftar Pasar</h1>
             <p className="text-lg text-gray-500 mt-2">Klik pasar untuk melihat perbandingan harga harian.</p>

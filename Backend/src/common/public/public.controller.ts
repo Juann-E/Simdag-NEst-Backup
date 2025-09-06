@@ -1,6 +1,7 @@
 // backend/src/modules/public/public.controller.ts
 
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { PublicService } from './public.service';
 import { Public } from '../decorators/public.decorator';
 
@@ -12,6 +13,12 @@ export class PublicController {
   @Get('markets')
   findAllMarkets() {
     return this.publicService.findAllMarkets();
+  }
+
+  @Public()
+  @Get('items')
+  findAllItems() {
+    return this.publicService.findAllItems();
   }
 
   @Public()
@@ -28,7 +35,23 @@ export class PublicController {
 
   @Public()
   @Get('chart-data')
-  getChartData() {
+  getChartData(
+    @Query('marketId') marketId?: string,
+    @Query('itemId') itemId?: string
+  ) {
+    // Jika itemId disediakan, gunakan chart untuk komoditas tertentu
+    if (itemId) {
+      const parsedItemId = +itemId;
+      const parsedMarketId = marketId ? +marketId : undefined;
+      return this.publicService.getChartDataForCommodity(parsedItemId, parsedMarketId);
+    }
+    
+    // Jika hanya marketId disediakan, gunakan chart untuk pasar tertentu
+    if (marketId) {
+      return this.publicService.getChartDataForMarket(+marketId);
+    }
+    
+    // Default: chart untuk semua data
     return this.publicService.getChartData();
   }
 
@@ -52,8 +75,13 @@ export class PublicController {
 
   @Public()
   @Get('stock-pangan-chart-data')
-  getStockPanganChartData() {
-    return this.publicService.getStockPanganChartData();
+  getStockPanganChartData(
+    @Query('distributorId') distributorId?: string,
+    @Query('komoditasId') komoditasId?: string
+  ) {
+    const parsedDistributorId = distributorId ? +distributorId : undefined;
+    const parsedKomoditasId = komoditasId ? +komoditasId : undefined;
+    return this.publicService.getStockPanganChartData(parsedDistributorId, parsedKomoditasId);
   }
 
   @Public()
@@ -66,5 +94,75 @@ export class PublicController {
   @Get('distributor/:distributorId/stock-monthly')
   getDistributorStockMonthly(@Param('distributorId') distributorId: number) {
     return this.publicService.getDistributorStockMonthly(+distributorId);
+  }
+
+  @Public()
+  @Get('agen')
+  findAllAgen() {
+    return this.publicService.findAllAgen();
+  }
+
+  @Public()
+  @Get('realisasi-bulanan-lpg')
+  findAllRealisasiBulananLpg() {
+    return this.publicService.findAllRealisasiBulananLpg();
+  }
+
+  @Public()
+  @Get('realisasi-bulanan-lpg/:id')
+  findOneRealisasiBulananLpg(@Param('id') id: number) {
+    return this.publicService.findOneRealisasiBulananLpg(+id);
+  }
+
+  @Public()
+  @Get('spbu')
+  findAllSpbu() {
+    return this.publicService.findAllSpbu();
+  }
+
+  @Public()
+  @Get('realisasi-bulanan-bbm')
+  findAllRealisasiBulananBbm() {
+    return this.publicService.findAllRealisasiBulananBbm();
+  }
+
+  @Public()
+  @Get('realisasi-bulanan-bbm/spbu/:spbuId')
+  findRealisasiBulananBbmBySpbu(@Param('spbuId') spbuId: number) {
+    return this.publicService.findRealisasiBulananBbmBySpbu(+spbuId);
+  }
+
+  @Public()
+  @Get('lpg-chart-data')
+  getLpgChartData(
+    @Query('year') year?: string,
+    @Query('agenId') agenId?: string
+  ) {
+    const yearNum = year ? parseInt(year) : undefined;
+    const agenIdNum = agenId ? parseInt(agenId) : undefined;
+    return this.publicService.getLpgChartData(yearNum, agenIdNum);
+  }
+
+  @Public()
+  @Get('bbm-chart-data')
+  getBbmChartData(
+    @Query('year') year?: string,
+    @Query('spbuId') spbuId?: string
+  ) {
+    const yearNum = year ? parseInt(year) : undefined;
+    const spbuIdNum = spbuId ? parseInt(spbuId) : undefined;
+    return this.publicService.getBbmChartData(yearNum, spbuIdNum);
+  }
+
+  @Public()
+  @Get('jenis-bbm')
+  findAllJenisBbm() {
+    return this.publicService.findAllJenisBbm();
+  }
+
+  @Public()
+  @Get('komoditas-stock-pangan')
+  findAllKomoditasStockPangan() {
+    return this.publicService.findAllKomoditasStockPangan();
   }
 }

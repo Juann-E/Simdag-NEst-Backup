@@ -4,6 +4,35 @@ saran untuk bbm LPG DB
         jenis bbm
         keterangan
 
+        --tabel spbu
+    CREATE TABLE spbu (
+        id_spbu INT AUTO_INCREMENT PRIMARY KEY,
+        no_spbu VARCHAR(50) NOT NULL,
+        id_kecamatan INT NOT NULL,
+        id_kelurahan INT NOT NULL,
+        alamat TEXT NOT NULL,
+        latitude DECIMAL(10,7),
+        longitude DECIMAL(10,7),
+        telepon VARCHAR(50),
+        penanggung_jawab VARCHAR(100),
+        FOREIGN KEY (id_kecamatan) REFERENCES kecamatan(id_kecamatan),
+        FOREIGN KEY (id_kelurahan) REFERENCES kelurahan(id_kelurahan)
+    );
+    --table agen
+    CREATE TABLE `agen` (
+        `id_agen` int(11) NOT NULL,
+        `nama_usaha` varchar(100) NOT NULL,
+        `id_kecamatan` int(11) NOT NULL,
+        `id_kelurahan` int(11) NOT NULL,
+        `alamat` text NOT NULL,
+        `latitude` decimal(10,7) DEFAULT NULL,
+        `longitude` decimal(10,7) DEFAULT NULL,
+        `telepon` varchar(50) DEFAULT NULL,
+        `penanggung_jawab` varchar(100) DEFAULT NULL,
+        `nomor_hp_penanggung_jawab` varchar(20) DEFAULT NULL,
+        `status` enum('Aktif','Tidak Aktif') NOT NULL DEFAULT 'Aktif'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
     realisasi Bulanan LPG --> (jangan pula berikan tabel agen)
         id_Realisasi_LPG
         nama agen (fk) -> diambil dari table agen
@@ -17,6 +46,28 @@ saran untuk bbm LPG DB
         tanggal (bulan+tahun)
         jenis_bbm (fk) -> diambil dari jenis bbm
         Realisasi_liter
+
+        hasil : 
+            -- Tabel untuk mencatat realisasi bulanan LPG per agen
+            CREATE TABLE realisasi_bulanan_lpg (
+                id_realisasi_lpg INT AUTO_INCREMENT PRIMARY KEY,
+                id_agen INT NOT NULL,
+                periode VARCHAR(7) NOT NULL, -- Diubah dari tanggal menjadi periode format 'YYYY-MM'
+                realisasi_tabung INT NOT NULL,
+                FOREIGN KEY (id_agen) REFERENCES agen(id_agen)
+            );
+
+            -- Tabel untuk mencatat realisasi bulanan BBM per SPBU
+            CREATE TABLE realisasi_bulanan_bbm (
+                id_realisasi_bbm INT AUTO_INCREMENT PRIMARY KEY,
+                id_spbu INT NOT NULL,
+                id_jenis_bbm INT NOT NULL,
+                periode VARCHAR(7) NOT NULL, -- Diubah dari tanggal menjadi periode format 'YYYY-MM'
+                realisasi_liter DECIMAL(12, 2) NOT NULL,
+                FOREIGN KEY (id_spbu) REFERENCES spbu(id_spbu),
+                FOREIGN KEY (id_jenis_bbm) REFERENCES jenis_bbm(id_jenis_bbm)
+            );
+
 
 Breakdown cara kerja
 

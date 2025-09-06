@@ -1,91 +1,43 @@
-12:38:27 PM: Netlify Build                                                 
-12:38:27 PM: ────────────────────────────────────────────────────────────────
-12:38:27 PM: ​
-12:38:27 PM: ❯ Version
-12:38:27 PM:   @netlify/build 35.1.2
-12:38:27 PM: ​
-12:38:27 PM: ❯ Flags
-12:38:27 PM:   accountId: 68afe2bc798e791b4aa8b13b
-12:38:27 PM:   baseRelDir: true
-12:38:27 PM:   buildId: 68afeb119e81250008eb8f4c
-12:38:27 PM:   deployId: 68afeb119e81250008eb8f4e
-12:38:27 PM: ​
-12:38:27 PM: ❯ Current directory
-12:38:27 PM:   /opt/build/repo/Frontend
-12:38:27 PM: ​
-12:38:27 PM: ❯ Config file
-12:38:27 PM:   /opt/build/repo/netlify.toml
-12:38:27 PM: ​
-12:38:27 PM: ❯ Context
-12:38:27 PM:   production
-12:38:27 PM: ​
-12:38:27 PM: ❯ Installing extensions
-12:38:27 PM:    - neon
-12:38:52 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
-12:38:47 PM: ​
-12:38:47 PM: ❯ Loading extensions
-12:38:47 PM:    - neon
-12:38:48 PM: ​
-12:38:48 PM: build.command from netlify.toml                               
-12:38:48 PM: ────────────────────────────────────────────────────────────────
-12:38:48 PM: ​
-12:38:48 PM: $ npm run build
-12:38:48 PM: > frontend@0.0.0 build
-12:38:48 PM: > tsc -b && vite build
-12:38:51 PM: src/components/MapSection.tsx(122,9): error TS6133: 'initialCenter' is declared but its value is never read.
-12:38:51 PM: src/components/admin/kepokmas/barang_pasar_grid/BarangPasarGrid.tsx(5,10): error TS6133: 'Link' is declared but its value is never read.
-12:38:51 PM: src/components/admin/spbu-lpg/Spbu.tsx(37,10): error TS6133: 'loading' is declared but its value is never read.
-12:38:51 PM: src/components/admin/spbu-lpg/Spbu.tsx(38,10): error TS6133: 'error' is declared but its value is never read.
-12:38:51 PM: src/components/admin/stock-pangan/distributor/Distributor.tsx(270,55): error TS6133: 'index' is declared but its value is never read.
-12:38:51 PM: src/components/admin/stock-pangan/komoditas/Komoditas.tsx(272,41): error TS6133: 'index' is declared but its value is never read.
-12:38:51 PM: src/components/admin/stock-pangan/satuan-barang/SatuanBarang.tsx(165,42): error TS6133: 'index' is declared but its value is never read.
-12:38:51 PM: src/components/admin/stock_pangan/komoditas/Komoditas.tsx(20,11): error TS6196: 'FormData' is declared but never used.
-12:38:51 PM: src/pages/admin/DashboardPage.tsx(86,22): error TS2345: Argument of type 'any[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
-12:38:51 PM:   Type 'any[]' is not assignable to type 'never[]'.
-12:38:51 PM:     Type 'any' is not assignable to type 'never'.
-12:38:51 PM: src/pages/admin/DashboardPage.tsx(212,23): error TS2322: Type '{ data: never[]; lines: any; }' is not assignable to type 'IntrinsicAttributes'.
-12:38:51 PM:   Property 'data' does not exist on type 'IntrinsicAttributes'.
-12:38:51 PM: src/pages/admin/DashboardPage.tsx(212,47): error TS2304: Cannot find name 'chartLines'.
-12:38:51 PM: src/utils/apiUtils.ts(2,33): error TS6133: 'checkApiStatus' is declared but its value is never read.
-12:38:52 PM: ​
-12:38:52 PM: "build.command" failed                                        
-12:38:52 PM: ────────────────────────────────────────────────────────────────
-12:38:52 PM: ​
-12:38:52 PM:   Error message
-12:38:52 PM:   Command failed with exit code 2: npm run build (https://ntl.fyi/exit-code-2)
-12:38:52 PM: ​
-12:38:52 PM:   Error location
-12:38:52 PM:   In build.command from netlify.toml:
-12:38:52 PM:   npm run build
-12:38:52 PM: ​
-12:38:52 PM:   Resolved config
-12:38:52 PM:   build:
-12:38:52 PM:     base: /opt/build/repo/Frontend
-12:38:52 PM:     command: npm run build
-12:38:52 PM:     commandOrigin: config
-12:38:52 PM:     environment:
-12:38:52 PM:       - NETLIFY_DATABASE_URL
-12:38:52 PM:       - NETLIFY_DATABASE_URL_UNPOOLED
-12:38:52 PM:       - NODE_VERSION
-12:38:52 PM:       - NPM_VERSION
-12:38:52 PM:     publish: /opt/build/repo/Frontend/Frontend/dist
-12:38:52 PM:     publishOrigin: config
-12:38:52 PM:   headers:
-12:38:52 PM:     - for: /*
-      values:
-        Referrer-Policy: strict-origin-when-cross-origin
-        X-Content-Type-Options: nosniff
-        X-Frame-Options: DENY
-        X-XSS-Protection: 1; mode=block
-    - for: /assets/*
-      values:
-        Cache-Control: public, max-age=31536000, immutable
-  headersOrigin: config
-  redirects:
-    - from: /*
-      status: 200
-      to: /index.html
-  redirectsOrigin: config
-12:38:52 PM: Build failed due to a user error: Build script returned non-zero exit code: 2
-12:38:52 PM: Failing build: Failed to build site
-12:38:53 PM: Finished processing build request in 46.418s
+fungsi CRUD REalisasi BBM dan LPG dirubah akrena merubah table di database
+
+CREATE TABLE realisasi_bulanan_lpg (
+    id_realisasi_lpg INT AUTO_INCREMENT PRIMARY KEY,
+    id_agen INT NOT NULL,
+    bulan VARCHAR(20) NOT NULL,
+    tahun VARCHAR(4) NOT NULL,
+    realisasi_tabung INT NOT NULL,
+    FOREIGN KEY (id_agen) REFERENCES agen(id_agen)
+);
+
+-- Tabel untuk mencatat realisasi bulanan BBM per SPBU
+CREATE TABLE realisasi_bulanan_bbm (
+    id_realisasi_bbm INT AUTO_INCREMENT PRIMARY KEY,
+    id_spbu INT NOT NULL,
+    id_jenis_bbm INT NOT NULL,
+    bulan VARCHAR(20) NOT NULL,
+    tahun VARCHAR(4) NOT NULL,
+    realisasi_liter DECIMAL(12, 2) NOT NULL,
+    FOREIGN KEY (id_spbu) REFERENCES spbu(id_spbu),
+    FOREIGN KEY (id_jenis_bbm) REFERENCES jenis_bbm(id_jenis_bbm)
+);
+
+dummy data
+
+-- Isi data contoh untuk tabel realisasi_bulanan_lpg TAHUN 2025
+INSERT INTO `realisasi_bulanan_lpg` (`id_agen`, `bulan`, `tahun`, `realisasi_tabung`) VALUES
+(1, 'Januari', '2025', 1400),
+(2, 'Januari', '2025', 1050),
+(3, 'Januari', '2025', 850),
+(1, 'Februari', '2025', 1420),
+(2, 'Februari', '2025', 1150);
+
+-- Isi data contoh untuk tabel realisasi_bulanan_bbm TAHUN 2025
+INSERT INTO `realisasi_bulanan_bbm` (`id_spbu`, `id_jenis_bbm`, `bulan`, `tahun`, `realisasi_liter`) VALUES
+(1, 1, 'Januari', '2025', 28000.00), -- SPBU 1, Pertalite, Jan 2025
+(1, 2, 'Januari', '2025', 17000.50), -- SPBU 1, Pertamax, Jan 2025
+(2, 1, 'Januari', '2025', 35000.00), -- SPBU 2, Pertalite, Jan 2025
+(2, 4, 'Januari', '2025', 19000.00), -- SPBU 2, Solar, Jan 2025
+(1, 1, 'Februari', '2025', 28500.25), -- SPBU 1, Pertalite, Feb 2025
+(2, 5, 'Februari', '2025', 10500.00);   -- SPBU 2, Dexlite, Feb 2025
+
+

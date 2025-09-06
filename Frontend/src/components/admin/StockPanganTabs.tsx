@@ -9,7 +9,7 @@ interface StockPanganTabsProps {
 
 export default function StockPanganTabs({ activeTab, setActiveTab }: StockPanganTabsProps) {
   const tabs = [
-    { name: 'Distributor', icon: <Truck size={16} /> },
+    { name: 'Toko Besar', icon: <Truck size={16} /> },
     { name: 'Satuan Komoditas', icon: <Weight size={16} /> },
     { name: 'Komoditas', icon: <Package size={16} /> },
     { name: 'Transaksi Stock Pangan', icon: <ArrowRightLeft size={16} /> },

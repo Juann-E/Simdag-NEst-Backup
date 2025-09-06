@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Building2, Package, DatabaseBackup, Car, Users, Fuel, Zap, Truck } from 'lucide-react';
 import PriceChart from '../../components/PriceChart';
 import StockPanganChart from '../../components/StockPanganChart';
+import LpgBbmChart from '../../components/charts/LpgBbmChart';
 
 // Definisikan tipe data untuk membantu kita
 interface PriceHistoryItem {
@@ -21,6 +22,14 @@ interface Market {
   nama_pasar: string;
 }
 
+interface Item {
+  id: number;
+  namaBarang: string;
+  satuan?: {
+    satuanBarang: string;
+  };
+}
+
 export default function DashboardPage() {
   // State untuk statistik
   const [marketCount, setMarketCount] = useState(0);
@@ -35,9 +44,11 @@ export default function DashboardPage() {
   // State untuk data mentah
   const [allPrices, setAllPrices] = useState<PriceHistoryItem[]>([]);
   const [allMarkets, setAllMarkets] = useState<Market[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
 
   // State untuk chart yang dikontrol dari halaman ini
   const [selectedMarketId, setSelectedMarketId] = useState<string>('');
+  const [selectedItemId, setSelectedItemId] = useState<string>('');
   const [chartData, setChartData] = useState<any[]>([]);
   const [chartLines, setChartLines] = useState<{ key: string; color: string; }[]>([]);
 
@@ -55,9 +66,9 @@ export default function DashboardPage() {
       const headers = { Authorization: `Bearer ${token}` };
 
       try {
-        const [marketsRes, pricesRes, dashboardStatsRes] = await Promise.all([
+        const [marketsRes, itemsRes, dashboardStatsRes] = await Promise.all([
           axios.get('http://localhost:3000/nama-pasar', { headers }),
-          axios.get('http://localhost:3000/harga-barang-pasar', { headers }),
+          axios.get('http://localhost:3000/public/items'),
           axios.get('http://localhost:3000/public/dashboard-stats')
         ]);
 
@@ -74,12 +85,13 @@ export default function DashboardPage() {
 
         // 2. Set data mentah untuk chart
         setAllMarkets(marketsRes.data);
-        setAllPrices(pricesRes.data);
+        setItems(itemsRes.data);
 
-        // 3. Set pasar pertama sebagai default jika ada
+        // 3. Set pasar pertama sebagai default, tapi biarkan item kosong untuk menampilkan semua komoditas
         if (marketsRes.data.length > 0) {
           setSelectedMarketId(marketsRes.data[0].id.toString());
         }
+        // Biarkan selectedItemId kosong agar menampilkan semua komoditas
 
       } catch (error) {
         console.error("Gagal mengambil data dashboard:", error);
@@ -91,47 +103,28 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
-  // useEffect untuk memproses ulang data chart setiap kali pasar yang dipilih berubah
+  // useEffect untuk mengambil data chart berdasarkan pilihan item dan pasar
   useEffect(() => {
-    if (!selectedMarketId || allPrices.length === 0) return;
-
-    const numericMarketId = parseInt(selectedMarketId);
-
-    // Filter harga berdasarkan pasar yang dipilih
-    const pricesForSelectedMarket = allPrices.filter(
-      p => p.barangPasar?.pasar?.id === numericMarketId
-    );
-
-    // Ambil 5 tanggal unik terakhir
-    const recentDates = [...new Set(pricesForSelectedMarket.map(p => p.tanggal_harga.split('T')[0]))]
-      .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-      .slice(0, 5)
-      .reverse();
-
-    // Kelompokkan data berdasarkan tanggal
-    const groupedByDate: { [key: string]: any } = {};
-    recentDates.forEach(date => {
-      groupedByDate[date] = { day: new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) };
-    });
-
-    pricesForSelectedMarket.forEach(p => {
-      const date = p.tanggal_harga.split('T')[0];
-      if (groupedByDate[date]) {
-        groupedByDate[date][p.barangPasar.barang.namaBarang] = p.harga;
+    const fetchChartData = async () => {
+      try {
+        const params = new URLSearchParams();
+        if (selectedItemId) params.append('itemId', selectedItemId);
+        if (selectedMarketId) params.append('marketId', selectedMarketId);
+        
+        const url = `http://localhost:3000/public/chart-data${params.toString() ? `?${params.toString()}` : ''}`;
+        const response = await axios.get(url);
+        
+        setChartData(response.data.chartData || []);
+        setChartLines(response.data.chartLines || []);
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+        setChartData([]);
+        setChartLines([]);
       }
-    });
+    };
 
-    const formattedChartData = Object.values(groupedByDate);
-    setChartData(formattedChartData);
-
-    // Tentukan garis-garis untuk chart (maksimal 10)
-    const lineKeys = [...new Set(pricesForSelectedMarket.map(p => p.barangPasar.barang.namaBarang))]
-      .slice(0, 10);
-
-    const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe', '#00c49f', '#d0ed57', '#a28fd0', '#ff6f91', '#2f4f4f'];
-    setChartLines(lineKeys.map((key, index) => ({ key, color: colors[index % colors.length] })));
-
-  }, [selectedMarketId, allPrices]); // Dijalankan ulang jika selectedMarketId atau allPrices berubah
+    fetchChartData();
+  }, [selectedItemId, selectedMarketId]); // Dijalankan ulang jika selectedItemId atau selectedMarketId berubah
 
 
   return (
@@ -203,7 +196,7 @@ export default function DashboardPage() {
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500">Distributor</p>
+            <p className="text-sm text-gray-500">Toko Besar</p>
             <p className="text-3xl font-bold text-gray-800">
               {loading ? '...' : distributorCount}
             </p>
@@ -247,9 +240,14 @@ export default function DashboardPage() {
             data={chartData}
             lines={chartLines}
             markets={allMarkets}
+            items={items}
             selectedMarketId={selectedMarketId}
+            selectedItemId={selectedItemId}
             onMarketChange={(e) => setSelectedMarketId(e.target.value)}
+            onItemChange={(e) => setSelectedItemId(e.target.value)}
             loading={loading}
+            chartTitle="Tren Harga Komoditas - Dashboard Admin"
+            chartSubtitle="Pilih komoditas dan pasar untuk melihat tren harga mingguan."
           />
         </div>
       </div>
@@ -259,6 +257,20 @@ export default function DashboardPage() {
         <div className="lg:col-span-2">
           <StockPanganChart />
         </div>
+      </div>
+
+      {/* LPG and BBM Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        <LpgBbmChart 
+          type="lpg" 
+          title="Realisasi Bulanan LPG"
+          className=""
+        />
+        <LpgBbmChart 
+          type="bbm" 
+          title="Realisasi Bulanan BBM"
+          className=""
+        />
       </div>
     </div>
   );

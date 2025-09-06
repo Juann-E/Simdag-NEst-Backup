@@ -13,6 +13,9 @@ export default function Sidebar() {
   // Cek apakah rute saat ini ada di dalam section SPBU LPG
   const isSpbuLpgActive = location.pathname.startsWith('/admin/spbu-lpg');
   
+  // Cek apakah rute saat ini ada di dalam section BBM LPG
+  const isBbmLpgActive = location.pathname.startsWith('/admin/bbm-lpg');
+  
   // Cek apakah rute saat ini ada di dalam section Settings
   const isSettingsActive = location.pathname.startsWith('/admin/settings');
   
@@ -24,6 +27,9 @@ export default function Sidebar() {
   
   // State untuk menu SPBU LPG
   const [isSpbuLpgOpen, setIsSpbuLpgOpen] = useState(isSpbuLpgActive);
+  
+  // State untuk menu BBM LPG
+  const [isBbmLpgOpen, setIsBbmLpgOpen] = useState(isBbmLpgActive);
   
   // State untuk menu Stock Pangan
   const [isStockPanganOpen, setIsStockPanganOpen] = useState(isStockPanganActive);
@@ -47,6 +53,13 @@ export default function Sidebar() {
       setIsSpbuLpgOpen(true);
     }
   }, [isSpbuLpgActive]);
+  
+  // Efek untuk membuka menu BBM LPG secara otomatis jika pengguna menavigasi ke halamannya
+  useEffect(() => {
+    if (isBbmLpgActive) {
+      setIsBbmLpgOpen(true);
+    }
+  }, [isBbmLpgActive]);
   
   // Efek untuk membuka menu Stock Pangan secara otomatis jika pengguna menavigasi ke halamannya
   useEffect(() => {
@@ -159,6 +172,37 @@ export default function Sidebar() {
         )}
 
         <button 
+          onClick={() => setIsBbmLpgOpen(!isBbmLpgOpen)} 
+          className={`w-full flex items-center justify-between p-2 text-gray-700 rounded-lg hover:bg-gray-200 ${isBbmLpgActive ? 'bg-gray-100' : ''}`}
+        >
+          <div className="flex items-center">
+            <Fuel className="w-5 h-5" />
+            <span className="ml-3">BBM LPG</span>
+          </div>
+          <ChevronDown className={`w-5 h-5 transition-transform ${isBbmLpgOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {isBbmLpgOpen && (
+          <div className="space-y-1 mt-1">
+            <NavLink to="/admin/bbm-lpg/jenis-bbm" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
+              Jenis BBM
+            </NavLink>
+            <NavLink to="/admin/bbm-lpg/realisasi-bulanan-lpg" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
+              Realisasi Bulanan LPG
+            </NavLink>
+            <NavLink to="/admin/bbm-lpg/realisasi-bulanan-bbm" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
+              Realisasi Bulanan BBM
+            </NavLink>
+            <NavLink to="/admin/report-agen-lpg" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
+              Report Agen LPG
+            </NavLink>
+            <NavLink to="/admin/bbm-lpg/report-bbm" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
+              Report BBM
+            </NavLink>
+          </div>
+        )}
+
+        <button 
           onClick={() => setIsStockPanganOpen(!isStockPanganOpen)} 
           className={`w-full flex items-center justify-between p-2 text-gray-700 rounded-lg hover:bg-gray-200 ${isStockPanganActive ? 'bg-gray-100' : ''}`}
         >
@@ -172,7 +216,7 @@ export default function Sidebar() {
         {isStockPanganOpen && (
           <div className="space-y-1 mt-1">
             <NavLink to="/admin/stock-pangan/distributor" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
-              Distributor
+                  Toko Besar
             </NavLink>
             <NavLink to="/admin/stock-pangan/satuan-barang" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
               Satuan Komoditas

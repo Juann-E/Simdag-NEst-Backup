@@ -7,7 +7,16 @@ async function bootstrap() {
 
   // ===================================================
   // ===== TAMBAHKAN BARIS INI UNTUK MENGIZINKAN KONEKSI DARI FRONTEND =====
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:5173', // Frontend development
+      'http://localhost:3000', // Local testing
+      'https://your-frontend-domain.com' // Production (replace with actual domain)
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  });
   // ===================================================
 
   // validasi global DTO

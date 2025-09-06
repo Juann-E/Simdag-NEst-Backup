@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Kecamatan } from '../../Setting/Kecamatan/kecamatan.entity';
 import { Kelurahan } from '../../Setting/Kelurahan/kelurahan.entity';
 
@@ -50,5 +50,8 @@ export class Spbu {
   @ManyToOne(() => Kelurahan)
   @JoinColumn({ name: 'id_kelurahan' })
   kelurahan: Kelurahan;
+
+  // @OneToMany('RealisasiBulananBbm', 'spbu')
+  // realisasiBulananBbm: any[];
 
 }

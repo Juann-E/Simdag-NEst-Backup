@@ -260,7 +260,7 @@ const TransaksiStockPangan: React.FC = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tahun</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bulan</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Distributor</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Toko Besar</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Komoditas</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock Awal</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengadaan</th>
@@ -390,14 +390,14 @@ const TransaksiStockPangan: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Distributor</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Toko Besar</label>
                     <select
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.idDistributor}
                       onChange={(e) => setFormData({ ...formData, idDistributor: parseInt(e.target.value) })}
                     >
-                      <option value={0}>Pilih Distributor</option>
+                      <option value={0}>Pilih Toko Besar</option>
                       {distributors.map((distributor) => (
                         <option key={distributor.id} value={distributor.id}>
                           {distributor.nama_distributor}

@@ -11,10 +11,14 @@ import DashboardPage from './pages/admin/DashboardPage';
 import Header from './components/Header';
 import KepokmasPage from './pages/admin/KepokmasPage';
 import SpbuLpgPage from './pages/admin/SpbuLpgPage';
+import BbmLpgPage from './pages/admin/BbmLpgPage';
 import StockPanganPage from './pages/admin/StockPanganPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import GridDetailPage from './components/admin/kepokmas/GridDetailPage';
 import HargaGridDetailPage from './components/admin/kepokmas/harga_barang_grid/HargaGridDetailPage';
+import RealisasiLpgDetailPage from './components/admin/bbm-lpg/RealisasiLpgDetailPage';
+import RealisasiBbmDetail from './components/admin/bbm-lpg/RealisasiBbmDetail';
+import ReportAgenLpgPage from './pages/admin/ReportAgenLpgPage';
 import TentangPage from './pages/TentangPage';
 
 // ## PATH IMPOR YANG SUDAH DIPERBAIKI ##
@@ -78,6 +82,9 @@ function App() {
         {/* Rute untuk SPBU LPG */}
         <Route path="spbu-lpg/:tab" element={<SpbuLpgPage />} />
 
+        {/* Rute untuk BBM LPG */}
+        <Route path="bbm-lpg/:tab" element={<BbmLpgPage />} />
+
         {/* Rute untuk Stock Pangan */}
         <Route path="stock-pangan/:tab" element={<StockPanganPage />} />
 
@@ -87,6 +94,9 @@ function App() {
         {/* Rute untuk halaman detail dan input */}
         <Route path="kepokmas/barang-pasar-grid/:marketId" element={<GridDetailPage />} />
         <Route path="kepokmas/harga-barang-grid/:marketId" element={<HargaGridDetailPage />} />
+        <Route path="bbm-lpg/realisasi-detail/:agenId" element={<RealisasiLpgDetailPage />} />
+        <Route path="bbm-lpg/realisasi-bbm-detail/:id_spbu" element={<RealisasiBbmDetail />} />
+        <Route path="report-agen-lpg" element={<ReportAgenLpgPage />} />
 
         {/* Rute baru untuk halaman input */}
         <Route path="/admin/kepokmas/input-harga/:marketId" element={<InputHargaPage />} />
@@ -101,6 +111,12 @@ function App() {
         <Route
           path="spbu-lpg"
           element={<Navigate to="/admin/spbu-lpg/spbu" replace />}
+        />
+        
+        {/* Tambahkan redirect agar /admin/bbm-lpg otomatis ke tab pertama */}
+        <Route
+          path="bbm-lpg"
+          element={<Navigate to="/admin/bbm-lpg/jenis-bbm" replace />}
         />
         
         {/* Tambahkan redirect agar /admin/stock-pangan otomatis ke tab pertama */}

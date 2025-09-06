@@ -82,7 +82,7 @@ export default function StockPanganStats() {
             <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-600 font-medium">Total Distributor</p>
+                  <p className="text-sm text-blue-600 font-medium">Total Toko Besar</p>
                   <p className="text-3xl font-bold text-blue-800">
                     {stats.distributors}
                   </p>

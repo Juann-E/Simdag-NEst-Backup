@@ -12,7 +12,7 @@ export default function HeroSection() {
             Sistem Monitoring Kepokmas Pasar
           </h2>
           <p className="text-sm sm:text-base lg:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
-            Platform digital terintegrasi untuk monitoring harga dan ketersediaan komoditas di seluruh pasar tradisional Kota Salatiga oleh Dinas Ketahanan Pangan (Kepokmas)
+            Platform digital terintegrasi untuk monitoring harga dan ketersediaan komoditas di pasar rakyat Kota Salatiga oleh Dinas Perdagangan
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-4 pt-4">
             <div className="bg-blue-600/10 text-blue-700 px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm">

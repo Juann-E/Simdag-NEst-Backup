@@ -1,9 +1,20 @@
 // src/components/Header.tsx
 
-import { Link } from 'react-router-dom';
-import { ChartColumn, TriangleAlert, Eye } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ChartColumn, TriangleAlert, Eye, MapPin, TrendingUp, Store, Package } from 'lucide-react';
 
 export default function Header() {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
+  // Fungsi untuk scroll ke section tertentu
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     // --- PERBAIKAN DI SINI: Ubah z-50 menjadi z-[1001] ---
     <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-[1001]">
@@ -23,6 +34,40 @@ export default function Header() {
                 </div>
             </Link>
           </div>
+
+          {/* Navigation Buttons - Only show on homepage */}
+          {isHomePage && (
+            <div className="hidden lg:flex items-center gap-1 mr-4">
+              <button
+                onClick={() => scrollToSection('peta-lokasi')}
+                className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+              >
+                <MapPin className="w-4 h-4" />
+                Peta Lokasi
+              </button>
+              <button
+                onClick={() => scrollToSection('grafik-statistik')}
+                className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+              >
+                <TrendingUp className="w-4 h-4" />
+                Grafik Statistik
+              </button>
+              <button
+                onClick={() => scrollToSection('daftar-pasar')}
+                className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+              >
+                <Store className="w-4 h-4" />
+                Daftar Pasar
+              </button>
+              <button
+                onClick={() => scrollToSection('monitoring-stock-pangan')}
+                className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+              >
+                <Package className="w-4 h-4" />
+                Monitoring Stock
+              </button>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex gap-2 sm:gap-3">

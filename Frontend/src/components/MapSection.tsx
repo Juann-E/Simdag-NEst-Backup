@@ -27,7 +27,7 @@ const icons = {
   agen: createColoredIcon('#F59E0B'),   // Kuning
   pangkalan_lpg: createColoredIcon('#EF4444'), // Merah
   spbe: createColoredIcon('#8B5CF6'),   // Ungu
-  distributor: createColoredIcon('#EC4899'), // Pink
+  distributor: createColoredIcon('#EC4899'), // Pink - Toko Besar
 };
 
 let DefaultIcon = L.icon({
@@ -139,7 +139,7 @@ export default function MapSection({ selectedLocation }: MapProps) {
     agen: 'Agen',
     pangkalan_lpg: 'Pangkalan LPG',
     spbe: 'SPBE',
-    distributor: 'Distributor'
+    distributor: 'Toko Besar'
   };
 
   const toggleCategory = (category: keyof typeof visibleCategories) => {
@@ -409,7 +409,7 @@ export default function MapSection({ selectedLocation }: MapProps) {
                >
                  <div className="flex items-center space-x-2 sm:space-x-3">
                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-pink-500 shadow-sm"></div>
-                   <span className="font-semibold text-gray-800 text-sm sm:text-base">Distributor ({locations.distributors.length})</span>
+                   <span className="font-semibold text-gray-800 text-sm sm:text-base">Toko Besar ({locations.distributors.length})</span>
                  </div>
                  <svg className={`w-6 h-6 transform transition-all duration-300 ${expandedCategories.distributor ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

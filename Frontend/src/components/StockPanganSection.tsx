@@ -36,16 +36,16 @@ export default function StockPanganSection() {
   }, [])
 
   return (
-    <section className="flex-shrink-0 container mx-auto px-4 py-16 mt-8 bg-blue-50">
+    <section id="monitoring-stock-pangan" className="flex-shrink-0 container mx-auto px-4 py-16 mt-8 bg-blue-50">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800">Monitoring Stock Pangan</h1>
         <p className="text-lg text-gray-500 mt-2">
-          Pantau perkembangan stok pangan di setiap distributor per bulan untuk transparansi ketersediaan komoditas.
+          Pantau perkembangan stok pangan di setiap toko besar per bulan untuk transparansi ketersediaan komoditas.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         {loading ? (
-          <p className="col-span-full text-center text-gray-500">Memuat data distributor...</p>
+          <p className="col-span-full text-center text-gray-500">Memuat data toko besar...</p>
         ) : distributors.length > 0 ? (
           distributors.map((distributor) => (
             <Link
@@ -82,7 +82,7 @@ export default function StockPanganSection() {
           ))
         ) : (
           <p className="col-span-full text-center text-gray-500">
-            Belum ada data distributor stock pangan.
+            Belum ada data toko besar stock pangan.
           </p>
         )}
       </div>

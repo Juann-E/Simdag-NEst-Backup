@@ -23,7 +23,7 @@ export default function Login() {
       setToken(data.access_token);
 
       // Simpan token ke localStorage supaya bisa dipakai di request berikutnya
-      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("accessToken", data.access_token);
 
     } catch (err) {
       console.error(err.message);

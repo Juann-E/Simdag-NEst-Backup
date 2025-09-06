@@ -13,6 +13,11 @@ import { Distributor } from '../../modules/StockPangan/Distributor/distributor.e
 import { NamaBarang } from '../../modules/Kepokmas/nama-barang/nama-barang.entity';
 import { KomoditasStockPangan } from '../../modules/StockPangan/Komoditas/komoditas.entity';
 import { TransaksiStockPangan } from '../../modules/StockPangan/TransaksiStockPangan/transaksi-stock-pangan.entity';
+import { RealisasiBulananLpg, RealisasiBulananLpgMain } from '../../modules/BBM/Realisasi LPG/realisasi-bulanan-lpg.entity';
+import { RealisasiBulananBbm, RealisasiBulananBbmDetail } from '../../modules/BBM/Realisasi BBM/realisasi-bulanan-bbm.entity';
+import { JenisBbm } from '../../modules/BBM/JenisBbm/jenis-bbm.entity';
+import { ReportAgenLpgService } from '../../modules/BBM/Report Agen LPG/report-agen-lpg.service';
+import { ReportType } from '../../modules/BBM/Report Agen LPG/dto/report-agen-lpg.dto';
 
 @Injectable()
 export class PublicService {
@@ -37,6 +42,17 @@ export class PublicService {
     private readonly komoditasStockPanganRepo: Repository<KomoditasStockPangan>,
     @InjectRepository(TransaksiStockPangan)
     private readonly transaksiStockPanganRepo: Repository<TransaksiStockPangan>,
+    @InjectRepository(RealisasiBulananLpg)
+    private readonly realisasiBulananLpgRepo: Repository<RealisasiBulananLpg>,
+    @InjectRepository(RealisasiBulananLpgMain)
+    private readonly realisasiBulananLpgMainRepo: Repository<RealisasiBulananLpgMain>,
+    @InjectRepository(RealisasiBulananBbm)
+    private readonly realisasiBulananBbmRepo: Repository<RealisasiBulananBbm>,
+    @InjectRepository(RealisasiBulananBbmDetail)
+    private readonly realisasiBulananBbmDetailRepo: Repository<RealisasiBulananBbmDetail>,
+    @InjectRepository(JenisBbm)
+    private readonly jenisBbmRepo: Repository<JenisBbm>,
+    private readonly reportAgenLpgService: ReportAgenLpgService,
   ) {}
 
   /**
@@ -54,6 +70,15 @@ export class PublicService {
    */
   async findAllMarkets(): Promise<NamaPasar[]> {
     return this.pasarRepo.find();
+  }
+
+  /**
+   * Mengambil semua daftar barang/komoditas.
+   */
+  async findAllItems(): Promise<NamaBarang[]> {
+    return this.namaBarangRepo.find({
+      relations: ['satuan']
+    });
   }
 
   /**
@@ -96,6 +121,131 @@ export class PublicService {
   async getChartData() {
     const allPrices = await this.hargaRepo.find({
       relations: ['barangPasar', 'barangPasar.pasar', 'barangPasar.barang'],
+      order: { time_stamp: 'DESC' }
+    });
+
+    if (allPrices.length === 0) {
+      return { chartData: [], chartLines: [] };
+    }
+
+    const recentDates = [...new Set(allPrices.map(p => p.tanggal_harga.toString().split('T')[0]))]
+        .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+        .slice(0, 7).reverse();
+
+    const recentPrices = allPrices.filter(p => recentDates.includes(p.tanggal_harga.toString().split('T')[0]));
+    
+    const itemFrequency = new Map<string, number>();
+    recentPrices.forEach(p => {
+        const itemName = p.barangPasar?.barang?.namaBarang;
+        if (itemName) {
+            itemFrequency.set(itemName, (itemFrequency.get(itemName) || 0) + 1);
+        }
+    });
+
+    const topItems = [...itemFrequency.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(entry => entry[0]);
+
+    const groupedByDate: { [key: string]: any } = {};
+    recentDates.forEach(date => {
+      groupedByDate[date] = { day: new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) };
+    });
+
+    recentPrices.forEach(p => {
+      const date = p.tanggal_harga.toString().split('T')[0];
+      const itemName = p.barangPasar?.barang?.namaBarang;
+      if (groupedByDate[date] && topItems.includes(itemName)) {
+        if (!groupedByDate[date][itemName]) {
+            groupedByDate[date][itemName] = p.harga;
+        }
+      }
+    });
+    
+    const formattedChartData = Object.values(groupedByDate);
+    
+    const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe'];
+    const chartLines = topItems.map((key, index) => ({ key, color: colors[index % colors.length] }));
+
+    return { chartData: formattedChartData, chartLines };
+  }
+
+  /**
+   * Mengambil data yang sudah diproses untuk chart berdasarkan komoditas dan pasar tertentu.
+   */
+  async getChartDataForCommodity(itemId: number, marketId?: number) {
+    const whereCondition: any = {
+      barangPasar: {
+        barang: { id: itemId }
+      }
+    };
+
+    // Jika marketId disediakan, tambahkan filter pasar
+    if (marketId) {
+      whereCondition.barangPasar.pasar = { id: marketId };
+    }
+
+    const allPrices = await this.hargaRepo.find({
+      relations: ['barangPasar', 'barangPasar.pasar', 'barangPasar.barang'],
+      where: whereCondition,
+      order: { time_stamp: 'DESC' }
+    });
+
+    if (allPrices.length === 0) {
+      return { chartData: [], chartLines: [], itemName: '', marketName: '' };
+    }
+
+    // Ambil nama barang dan pasar untuk informasi tambahan
+    const itemName = allPrices[0]?.barangPasar?.barang?.namaBarang || '';
+    const marketName = allPrices[0]?.barangPasar?.pasar?.nama_pasar || 'Semua Pasar';
+
+    const recentDates = [...new Set(allPrices.map(p => p.tanggal_harga.toString().split('T')[0]))]
+        .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+        .slice(0, 7).reverse();
+
+    const recentPrices = allPrices.filter(p => recentDates.includes(p.tanggal_harga.toString().split('T')[0]));
+    
+    const groupedByDate: { [key: string]: any } = {};
+    recentDates.forEach(date => {
+      groupedByDate[date] = { 
+        day: new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }),
+        [itemName]: null
+      };
+    });
+
+    // Untuk setiap tanggal, ambil harga rata-rata jika ada multiple entries
+    recentPrices.forEach(p => {
+      const date = p.tanggal_harga.toString().split('T')[0];
+      if (groupedByDate[date]) {
+        if (groupedByDate[date][itemName] === null) {
+          groupedByDate[date][itemName] = p.harga;
+        } else {
+          // Jika sudah ada harga, ambil rata-rata
+          groupedByDate[date][itemName] = (groupedByDate[date][itemName] + p.harga) / 2;
+        }
+      }
+    });
+    
+    const formattedChartData = Object.values(groupedByDate);
+    
+    // Hanya satu line untuk komoditas yang dipilih
+    const chartLines = [{ key: itemName, color: '#8884d8' }];
+
+    return { 
+      chartData: formattedChartData, 
+      chartLines, 
+      itemName, 
+      marketName 
+    };
+  }
+
+  /**
+   * Mengambil data yang sudah diproses untuk chart berdasarkan pasar tertentu.
+   */
+  async getChartDataForMarket(marketId: number) {
+    const allPrices = await this.hargaRepo.find({
+      relations: ['barangPasar', 'barangPasar.pasar', 'barangPasar.barang'],
+      where: { barangPasar: { pasar: { id: marketId } } },
       order: { time_stamp: 'DESC' }
     });
 
@@ -213,8 +363,18 @@ export class PublicService {
   /**
    * Mengambil data chart Stock Pangan berdasarkan transaksi bulanan
    */
-  async getStockPanganChartData() {
+  async getStockPanganChartData(distributorId?: number, komoditasId?: number) {
+    // Build where condition based on filters
+    const whereCondition: any = {};
+    if (distributorId) {
+      whereCondition.distributor = { id: distributorId };
+    }
+    if (komoditasId) {
+      whereCondition.komoditas = { id: komoditasId };
+    }
+
     const allTransaksi = await this.transaksiStockPanganRepo.find({
+      where: Object.keys(whereCondition).length > 0 ? whereCondition : undefined,
       relations: ['komoditas', 'distributor'],
       order: { tahun: 'DESC', bulan: 'DESC' }
     });
@@ -458,4 +618,236 @@ export class PublicService {
 
     return result.sort((a, b) => b.month.localeCompare(a.month));
   }
+
+  /**
+   * Mengambil semua data agen untuk keperluan public access
+   */
+  async findAllAgen(): Promise<Agen[]> {
+    return this.agenRepo.find({
+      relations: ['kecamatan', 'kelurahan'],
+      order: { nama_usaha: 'ASC' }
+    });
+  }
+
+  /**
+   * Mengambil semua data realisasi bulanan LPG untuk keperluan public access
+   */
+  async findAllRealisasiBulananLpg(): Promise<RealisasiBulananLpg[]> {
+    return this.realisasiBulananLpgRepo.find({
+      relations: ['agen'],
+      order: { tahun: 'DESC', bulan: 'DESC' }
+    });
+  }
+
+  /**
+   * Mengambil satu data realisasi bulanan LPG berdasarkan ID untuk keperluan public access
+   */
+  async findOneRealisasiBulananLpg(id: number): Promise<RealisasiBulananLpg | null> {
+    return this.realisasiBulananLpgRepo.findOne({
+      where: { id_realisasi_lpg: id },
+      relations: ['agen']
+    });
+  }
+
+  /**
+   * Mengambil semua data SPBU untuk keperluan public access
+   */
+  async findAllSpbu(): Promise<Spbu[]> {
+    return this.spbuRepo.find({
+      relations: ['kecamatan', 'kelurahan'],
+      order: { nama_usaha: 'ASC' }
+    });
+  }
+
+  /**
+   * Mengambil semua data realisasi bulanan BBM untuk keperluan public access
+   */
+  async findAllRealisasiBulananBbm(): Promise<RealisasiBulananBbmDetail[]> {
+    try {
+      console.log('Fetching all BBM data...');
+      const result = await this.realisasiBulananBbmDetailRepo
+        .createQueryBuilder('detail')
+        .leftJoinAndSelect('detail.realisasiMain', 'main')
+        .leftJoinAndSelect('main.spbu', 'spbu')
+        .leftJoinAndSelect('detail.jenisBbm', 'jenisBbm')
+        .orderBy('detail.tahun', 'DESC')
+        .addOrderBy('detail.bulan', 'DESC')
+        .getMany();
+      
+      console.log(`Found ${result.length} BBM records`);
+      return result;
+    } catch (error) {
+      console.error('Error in findAllRealisasiBulananBbm:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Mengambil data realisasi bulanan BBM berdasarkan SPBU ID untuk keperluan public access
+   */
+  async findRealisasiBulananBbmBySpbu(spbuId: number): Promise<any[]> {
+    try {
+      console.log(`Fetching BBM data for SPBU ID: ${spbuId}`);
+      
+      // Use raw query to avoid TypeORM issues
+      const query = `
+        SELECT 
+          bbm.*,
+          spbu.nama_usaha,
+          spbu.no_spbu,
+          spbu.alamat,
+          jenis.jenis_bbm,
+          jenis.keterangan as jenis_keterangan
+        FROM realisasi_bulanan_bbm bbm
+        LEFT JOIN spbu ON spbu.id_spbu = bbm.id_spbu
+        LEFT JOIN jenis_bbm jenis ON jenis.id_jenis_bbm = bbm.id_jenis_bbm
+        WHERE bbm.id_spbu = ?
+        ORDER BY bbm.tahun DESC, bbm.bulan DESC
+      `;
+      
+      const result = await this.realisasiBulananBbmRepo.query(query, [spbuId]);
+      console.log(`Found ${result.length} BBM records for SPBU ${spbuId}`);
+      return result;
+    } catch (error) {
+      console.error('Error in findRealisasiBulananBbmBySpbu:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Mengambil semua data jenis BBM untuk keperluan public access
+   */
+  async findAllJenisBbm(): Promise<JenisBbm[]> {
+    return this.jenisBbmRepo.find({
+      order: { jenis_bbm: 'ASC' }
+    });
+  }
+
+  /**
+   * Mengambil data chart untuk realisasi bulanan LPG
+   */
+  async getLpgChartData(year?: number, agenId?: number) {
+    const currentYear = year || new Date().getFullYear();
+    console.log('Getting LPG chart data for year:', currentYear, 'agenId:', agenId);
+    
+    let queryBuilder = this.realisasiBulananLpgRepo
+      .createQueryBuilder('detail')
+      .leftJoinAndSelect('detail.realisasiMain', 'main')
+      .leftJoinAndSelect('main.agen', 'agen')
+      .where('detail.tahun = :year', { year: currentYear })
+      .orderBy('detail.bulan', 'ASC');
+    
+    if (agenId) {
+      queryBuilder = queryBuilder.andWhere('main.id_agen = :agenId', { agenId });
+    }
+    
+    const lpgData = await queryBuilder.getMany();
+
+    // Group data by month
+    const monthlyData: { [key: string]: any } = {};
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    
+    // Initialize all months
+    months.forEach((month, index) => {
+      monthlyData[month] = { month, totalRealisasi: 0 };
+    });
+
+    // Aggregate data by month
+    lpgData.forEach(item => {
+      const monthName = months[item.bulan - 1];
+      if (monthlyData[monthName]) {
+        monthlyData[monthName].totalRealisasi += item.realisasi_tabung;
+      }
+    });
+
+    const chartData = Object.values(monthlyData);
+    const chartLines = [{ key: 'totalRealisasi', color: '#8884d8' }];
+
+    return { chartData, chartLines, year: currentYear };
+  }
+
+  /**
+   * Mengambil data chart untuk realisasi bulanan BBM
+   */
+  async getBbmChartData(year?: number, spbuId?: number) {
+    const currentYear = year || new Date().getFullYear();
+    
+    try {
+      console.log(`Fetching BBM data for year: ${currentYear}, spbuId: ${spbuId}`);
+      
+      // Use the correct repository for RealisasiBulananBbm
+      let queryBuilder = this.realisasiBulananBbmRepo
+        .createQueryBuilder('bbm')
+        .leftJoinAndSelect('bbm.jenisBbm', 'jenisBbm')
+        .where('bbm.tahun = :year', { year: currentYear });
+      
+      if (spbuId) {
+        queryBuilder = queryBuilder.andWhere('bbm.id_spbu = :spbuId', { spbuId });
+      }
+      
+      const bbmData = await queryBuilder
+        .orderBy('bbm.bulan', 'ASC')
+        .getMany();
+
+      console.log(`Found ${bbmData.length} BBM records for year ${currentYear}`);
+      if (bbmData.length > 0) {
+        console.log('Sample BBM data:', JSON.stringify(bbmData.slice(0, 2), null, 2));
+      }
+
+      // Group data by month and jenis BBM
+      const monthlyData: { [key: string]: any } = {};
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      const jenisBbmMap = new Map<string, string>();
+      
+      // Initialize all months
+      months.forEach((month, index) => {
+        monthlyData[month] = { month };
+      });
+
+      // Aggregate data by month and jenis BBM
+      bbmData.forEach(item => {
+        const monthName = months[parseInt(item.bulan) - 1];
+        const jenisBbmName = item.jenisBbm?.jenis_bbm || 'Unknown';
+        
+        jenisBbmMap.set(jenisBbmName, jenisBbmName);
+        
+        if (monthlyData[monthName]) {
+          if (!monthlyData[monthName][jenisBbmName]) {
+            monthlyData[monthName][jenisBbmName] = 0;
+          }
+          monthlyData[monthName][jenisBbmName] += parseFloat(item.realisasi_liter.toString());
+        }
+      });
+
+      const chartData = Object.values(monthlyData);
+      const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe'];
+      const chartLines = Array.from(jenisBbmMap.keys()).map((jenis, index) => ({
+        key: jenis,
+        color: colors[index % colors.length]
+      }));
+
+      console.log(`Returning chart data with ${chartData.length} months and ${chartLines.length} lines`);
+      console.log('Chart lines:', chartLines);
+      return { chartData, chartLines, year: currentYear };
+    } catch (error) {
+      console.error('Error in getBbmChartData:', error);
+      console.error('Error stack:', error.stack);
+      // Return empty data structure if error occurs
+      return { 
+        chartData: [], 
+        chartLines: [], 
+        year: currentYear 
+      };
+    }
+  }
+
+  /**
+   * Mengambil semua data komoditas stock pangan untuk halaman publik.
+   */
+  async findAllKomoditasStockPangan() {
+    return this.komoditasStockPanganRepo.find({
+      select: ['id', 'komoditas', 'satuan', 'keterangan']
+    });
+  }
+
 }

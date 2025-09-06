@@ -11,7 +11,7 @@ import ReportStockPangan from './stock-pangan/ReportStockPangan';
 
 // Daftar tab yang valid untuk dicocokkan dengan URL
 const validTabs = {
-  'distributor': 'Distributor',
+  'distributor': 'Toko Besar',
   'satuan-barang': 'Satuan Komoditas',
   'komoditas': 'Komoditas',
   'transaksi-stock': 'Transaksi Stock Pangan',
@@ -28,7 +28,7 @@ export default function StockPanganPage() {
   const { tab } = useParams();
   const navigate = useNavigate();
 
-  const currentTab = isValidTab(tab) ? validTabs[tab] : 'Distributor';
+  const currentTab = isValidTab(tab) ? validTabs[tab] : 'Toko Besar';
   const [activeTab, setActiveTab] = useState(currentTab);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function StockPanganPage() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'Distributor':
+      case 'Toko Besar':
         return <Distributor />;
       case 'Satuan Komoditas':
         return <SatuanBarang />;
@@ -63,7 +63,7 @@ export default function StockPanganPage() {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold text-gray-800">Stock Pangan</h1>
-      <p className="text-gray-500 mt-1">Sistem manajemen stock pangan - Kelola distributor, komoditas, dan transaksi</p>
+      <p className="text-gray-500 mt-1">Sistem manajemen stock pangan - Kelola toko besar, komoditas, dan transaksi</p>
 
       <StockPanganTabs activeTab={activeTab} setActiveTab={handleTabClick} />
 
