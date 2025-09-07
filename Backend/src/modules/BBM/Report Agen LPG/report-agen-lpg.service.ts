@@ -6,11 +6,7 @@ import { Agen } from '../../SPBU_LPG/Agen/agen.entity';
 import { ReportAgenLpgDto, ReportAgenLpgYearlyDto, ReportAgenLpgStatisticsDto, ReportAgenLpgYearlyStatisticsDto, StatisticsData } from './dto/report-agen-lpg.dto';
 import * as ExcelJS from 'exceljs';
 import PDFDocument from 'pdfkit';
-// import docx from 'docx';
-// const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
 import { ChartService } from '../../../common/services/chart.service';
-
-// Updated to include summary section like in the image
 
 @Injectable()
 export class ReportAgenLpgService {
@@ -27,126 +23,38 @@ export class ReportAgenLpgService {
   async generateMonthlyReport(dto: ReportAgenLpgDto): Promise<{ buffer: Buffer; fileName: string }> {
     const { bulan, tahun } = dto;
 
-    // Ambil data realisasi untuk bulan dan tahun tertentu
+    // 1. Fetch data
     const realisasiData = await this.realisasiRepo.find({
       where: { bulan: bulan, tahun: tahun },
       relations: ['realisasiMain', 'realisasiMain.agen'],
-      order: { realisasiMain: { agen: { nama_usaha: 'ASC' } } }
+      order: { realisasiMain: { agen: { nama_usaha: 'ASC' } } },
     });
 
-    // Buat workbook Excel
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Laporan LPG Bulanan');
-
-    // Header utama
-    worksheet.addRow(['PENYALURAN LPG 3 KG']);
-    worksheet.addRow([`BULAN ${this.getMonthName(bulan).toUpperCase()} TAHUN ${tahun}`]);
-    worksheet.addRow([]);
-
-    // Style header utama
-    worksheet.getRow(1).font = { bold: true, size: 14 };
-    worksheet.getRow(2).font = { bold: true, size: 12 };
-    worksheet.getRow(1).alignment = { horizontal: 'center' };
-    worksheet.getRow(2).alignment = { horizontal: 'center' };
-
-    // Merge cells untuk header
-    worksheet.mergeCells('A1:H1'); // Extended to accommodate chart area
-    worksheet.mergeCells('A2:H2');
-
-    // Header tabel
-    const headerRow = worksheet.addRow(['NO', 'NAMA AGEN', 'ALAMAT', 'Realisasi Penyaluran (tabung)']);
-    headerRow.font = { bold: true };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFE0E0E0' }
-    };
-    
-    // Add borders to header
-    headerRow.eachCell((cell) => {
-      cell.border = {
-        top: { style: 'thick' },
-        left: { style: 'thick' },
-        bottom: { style: 'thick' },
-        right: { style: 'thick' }
-      };
-    });
-
-    const dataStartRow = worksheet.rowCount + 1;
-    
-    // Data rows
-    realisasiData.forEach((item, index) => {
-      const addedRow = worksheet.addRow([
-        index + 1,
-        item.realisasiMain.agen.nama_usaha,
-        item.realisasiMain.agen.alamat,
-        item.realisasi_tabung
-      ]);
-      
-      // Add borders to all cells
-      addedRow.eachCell((cell) => {
-        cell.border = {
-          top: { style: 'thin' },
-          left: { style: 'thin' },
-          bottom: { style: 'thin' },
-          right: { style: 'thin' }
-        };
-      });
-    });
-
-    const dataEndRow = worksheet.rowCount;
-
-    // Auto-fit columns
-    worksheet.getColumn(1).width = 5;  // NO
-    worksheet.getColumn(2).width = 25; // NAMA AGEN
-    worksheet.getColumn(3).width = 30; // ALAMAT
-    worksheet.getColumn(4).width = 20; // REALISASI
-    
-    // Add note about chart visualization
-    if (realisasiData.length > 0) {
-      worksheet.addRow([]);
-      const noteRow = worksheet.addRow(['Catatan: Untuk membuat grafik, silakan gunakan data di atas untuk membuat chart di Excel.']);
-      noteRow.font = { italic: true, size: 10 };
-      noteRow.alignment = { horizontal: 'left', wrapText: true };
-      worksheet.mergeCells(`A${noteRow.number}:D${noteRow.number}`);
-      worksheet.getRow(noteRow.number).height = 25;
-    }
-
-    // Generate buffer
-    const buffer = await workbook.xlsx.writeBuffer();
-    const fileName = `Laporan_LPG_${this.getMonthName(bulan)}_${tahun}.xlsx`;
-
-    return { buffer: Buffer.from(buffer), fileName };
+    // 2. Build Excel using the utility
+    return this.excelBuilder.buildMonthlyReport(realisasiData, dto);
   }
 
   async generateYearlyReport(dto: ReportAgenLpgYearlyDto): Promise<{ buffer: Buffer; fileName: string }> {
-    const { tahun, kuota_mt } = dto;
+    const { tahun, kuota_mt = 100 } = dto;
 
-    // Ambil semua agen
-    const allAgen = await this.agenRepo.find({
-      order: { nama_usaha: 'ASC' }
-    });
-
-    // Ambil data realisasi untuk tahun tertentu
+    // 1. Fetch data
+    const allAgen = await this.agenRepo.find({ order: { nama_usaha: 'ASC' } });
     const realisasiData = await this.realisasiRepo.find({
       where: { tahun: tahun },
-      relations: ['realisasiMain', 'realisasiMain.agen']
+      relations: ['realisasiMain', 'realisasiMain.agen'],
     });
 
-    // Group data by agen and bulan
+    // 2. Process and map data
     const agenDataMap = new Map<number, any>();
-    
-    // Initialize agen data
     allAgen.forEach(agen => {
       agenDataMap.set(agen.id_agen, {
         nama_usaha: agen.nama_usaha,
         alamat: agen.alamat,
-        monthly: Array(12).fill(0), // 12 bulan
-        total: 0
+        monthly: Array(12).fill(0),
+        total: 0,
       });
     });
 
-    // Fill realisasi data
     realisasiData.forEach(item => {
       const agenData = agenDataMap.get(item.realisasiMain.id_agen);
       if (agenData) {
@@ -156,6 +64,7 @@ export class ReportAgenLpgService {
       }
     });
 
+<<<<<<< HEAD
     // Buat workbook Excel
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Laporan LPG Tahunan');
