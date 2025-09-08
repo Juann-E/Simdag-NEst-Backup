@@ -19,9 +19,7 @@ import HargaGridDetailPage from './components/admin/kepokmas/harga_barang_grid/H
 import RealisasiLpgDetailPage from './components/admin/bbm-lpg/RealisasiLpgDetailPage';
 import RealisasiBbmDetail from './components/admin/bbm-lpg/RealisasiBbmDetail';
 import ReportAgenLpgPage from './pages/admin/ReportAgenLpgPage';
-import TahunanPage from './pages/admin/TahunanPage';
 import TentangPage from './pages/TentangPage';
-
 
 // ## PATH IMPOR YANG SUDAH DIPERBAIKI ##
 import InputHargaPage from './components/admin/kepokmas/harga_barang_grid/InputHargaPage';
@@ -72,7 +70,6 @@ function App() {
         <Route path="/market/:marketId" element={<MarketDetailPage />} />
         <Route path="/distributor/:distributorId" element={<StockPanganDetailPage />} />
         <Route path="/tentang" element={<TentangPage />} />
-        
       </Route>
 
       {/* Rute Admin yang Terproteksi */}
@@ -100,9 +97,6 @@ function App() {
         <Route path="bbm-lpg/realisasi-detail/:agenId" element={<RealisasiLpgDetailPage />} />
         <Route path="bbm-lpg/realisasi-bbm-detail/:id_spbu" element={<RealisasiBbmDetail />} />
         <Route path="report-agen-lpg" element={<ReportAgenLpgPage />} />
-        
-        {/* Rute untuk halaman Tahunan */}
-        <Route path="tahunan" element={<TahunanPage />} />
 
         {/* Rute baru untuk halaman input */}
         <Route path="/admin/kepokmas/input-harga/:marketId" element={<InputHargaPage />} />
