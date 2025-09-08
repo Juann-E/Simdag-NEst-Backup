@@ -22,7 +22,7 @@ export default function HeroSection() {
               📊 Real-time Monitoring
             </div>
             <div className="bg-green-600/10 text-green-700 px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm">
-              🎯 2 Kecamatan
+              🎯 4 Kecamatan
             </div>
           </div>
         </div>
