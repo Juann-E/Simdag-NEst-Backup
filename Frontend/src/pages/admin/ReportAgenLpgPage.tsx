@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+import { DocumentArrowDownIcon, EyeIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BbmLpgTabs from '../../components/admin/BbmLpgTabs';
@@ -20,7 +20,7 @@ export default function ReportAgenLpgPage() {
   const [monthlyForm, setMonthlyForm] = useState<MonthlyReportForm>({
     monthYear: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
   });
-  const [yearlyForm, setYearlyForm] = useState<YearlyReportForm>({
+  const [yearlyForm, setYearlyForm] = useState({
     year: new Date().getFullYear().toString(),
     kuota_mt: ''
   });
@@ -30,12 +30,17 @@ export default function ReportAgenLpgPage() {
   // Download monthly Excel report
   const downloadMonthlyExcel = async () => {
     try {
+      if (!monthlyForm.monthYear) {
+        alert('Harap pilih bulan dan tahun terlebih dahulu.');
+        return;
+      }
+      
       setIsDownloadingMonthly(true);
-      const [year, month] = monthlyForm.monthYear.split('-');
       const token = localStorage.getItem('accessToken');
       
+      const [year, month] = monthlyForm.monthYear.split('-');
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
+        `http://localhost:3000/public/report-agen-lpg/download-monthly?year=${parseInt(year)}&month=${parseInt(month)}`,
         {
           responseType: 'blob',
           headers: {
@@ -48,14 +53,7 @@ export default function ReportAgenLpgPage() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      
-      const monthNames = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-      ];
-      const monthName = monthNames[parseInt(month) - 1];
-      
-      link.setAttribute('download', `Laporan_Agen_LPG_${monthName}_${year}.xlsx`);
+      link.setAttribute('download', `Laporan_Agen_LPG_${monthlyForm.monthYear}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -71,9 +69,13 @@ export default function ReportAgenLpgPage() {
   // Download yearly Excel report
   const downloadYearlyExcel = async () => {
     try {
-      // Validasi input kuota metrik ton
-      if (!yearlyForm.kuota_mt || parseFloat(yearlyForm.kuota_mt) <= 0) {
-        alert('Mohon masukkan kuota metrik ton yang valid (lebih dari 0)');
+      if (!yearlyForm.year || !yearlyForm.kuota_mt) {
+        alert('Harap lengkapi tahun dan kuota metrik ton terlebih dahulu.');
+        return;
+      }
+      
+      if (parseFloat(yearlyForm.kuota_mt) <= 0) {
+        alert('Kuota metrik ton harus lebih dari 0.');
         return;
       }
       
@@ -116,6 +118,18 @@ export default function ReportAgenLpgPage() {
     setYearlyForm(prev => ({ ...prev, [field]: value }));
   };
   
+  /**
+   * Fungsi untuk navigasi ke halaman laporan tahunan terpisah.
+   */
+  const openYearlyReportPage = () => {
+    if (!yearlyForm.kuota_mt || parseFloat(yearlyForm.kuota_mt) <= 0) {
+      alert('Harap masukkan nilai Kuota Metrik Ton yang valid (lebih dari 0) untuk melihat laporan.');
+      return;
+    }
+    // Navigasi ke halaman Tahunan dengan parameter
+    navigate(`/admin/tahunan?year=${yearlyForm.year}&kuota_mt=${yearlyForm.kuota_mt}`);
+  };
+   
   // Fungsi untuk mengubah tab dan navigasi
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
@@ -201,7 +215,7 @@ export default function ReportAgenLpgPage() {
             Download laporan agen LPG tahunan dalam format Excel dengan breakdown per bulan untuk setiap agen.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Tahun
@@ -239,6 +253,16 @@ export default function ReportAgenLpgPage() {
             
             <div>
               <button
+                onClick={openYearlyReportPage}
+                className="btn-secondary w-full flex items-center justify-center"
+              >
+                <EyeIcon className="h-4 w-4 mr-2" />
+                Lihat Statistik
+              </button>
+            </div>
+            
+            <div>
+              <button
                 onClick={downloadYearlyExcel}
                 disabled={isDownloadingYearly}
                 className="btn-primary w-full flex items-center justify-center"
@@ -260,6 +284,7 @@ export default function ReportAgenLpgPage() {
         </div>
         
       </div>
+
     </div>
   );
 }

@@ -185,7 +185,7 @@ export default function Report() {
             <select id="file-type" value={fileType} onChange={e => setFileType(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
               <option value="excel">Excel</option>
-              <option value="json">JSON</option>
+              {/* <option value="json">JSON</option> */}
             </select>
         </div>
 
