@@ -1,0 +1,148 @@
+spbu lpg
+    spbu done 
+    agen
+    pangkalan lpg
+    spbe
+
+kepokmas
+done{
+    nama Pasar  
+            keterangan  = alamat
+            CRUD biasa
+
+        satuan barang 
+            tanyakan bagian keterangan 
+                keterangan bisa untuk jenis barang nya  (kertas bisa pakai lembar)
+            CRUD biasa
+
+        nama barang
+            satuan barang diambil dari table satuan barang
+            CRUD biasa
+
+        barang pasar grid
+            table pasar dan di isi table barang pasar
+                spesifikasi 
+                    -> nama barang dari nama barang
+                    -> diberikan foreignkey yang sama dengan pasar yang dituju
+                    setiingan kecamatan keluarahan dan kecamatan
+            tabel pasar grid
+                table barang = per barang diberikan foreignkey pasar
+                jadi barang akan diberikan foreighkey  pasar agar barang yang dijual di pasar'
+                    tidak bercampur dengan baranga yang seharusnya tidak terjual
+
+        harga barang grid
+            dapatkan konteks harga barang default dan strategis
+
+                default = harga pasar (berubah rubah)
+                Buat seperti flearn
+}
+    
+
+    report
+        memilih nama toko / nama pasar
+        lalu memilih nama barang dimana barang itu adalah barang_pasar_grid
+        (pasar dan barang saling berkaitan(relasi)) lalu memilih tanggal awal dan tanggal akhir untuk jangkauan
+        pengambilan data lalu tipe filenya bisa pdf,excel,chart
+        namun sementara buat dulu menjadi excel biar mudah 
+        dan untuk refrensi format excelnya
+        PASAR BLAURAN TANGGAL : 2025-08-01 - 2025-08-16						
+        DINAS PERDAGANGAN KOTA SALATIGA						
+        No	Bahan Pokok	Satuan	01-08-2025	04-08-2025	05-08-2025	06-08-2025
+        1	Beras IR 64 (kw premium) (Kg)	kg	Rp14.500,00	Rp14.500,00	Rp15.000,00	Rp15.000,00
+        2	Beras IR 64 (kw medium) (Kg)	kg	Rp13.500,00	Rp13.500,00	Rp14.000,00	Rp13.500,00
+        3	Gula Pasir Kristal Putih (kw medium) (Kg)	kg	Rp16.000,00	Rp16.000,00	Rp17.000,00	Rp17.000,00
+
+
+
+BBMm LPG
+    
+    jenis bbm = masuk ke database
+
+    spbu realisasi (lpg dan bbm)
+        -> masuk pt ->  liat data tahunan
+
+    realisasi tabung
+        table agen lpg dipanggil ke bagian realisasi
+            -> keterangan di bagian realisasi untuk 
+
+    realisasi bbm
+        data di ambil dari table spbu dan dimasukan ke realisasi
+            keterangan di web sebelumnya adalah nomer spbu jadi di area realisasi
+                keterangan di isi status aktif/tidak aktif. dan disampingnya diberikan nomer spbunya
+
+        data untuk penjualan (realisasi) = buat tabel realisasi spbu dan foreign key dari spbu
+            tabel realisasi_spbu =  per bulan diberikan foreign key dari spbunya '
+            jenis bbm dipanggil dari database
+
+    report agen AgenLPG dan bbm
+        tahun yang ada di data realisasi juga terhubung ke sini untuk laporan yang ada
+        (penyarulan adalah laporan realisasnya)
+        yang dipanggiln adalh bulan dan tahun dari tiap pt (agen lpg)
+            tipe file yang diberikan 
+                excel: tabel agen dan penjualan
+                pdf: table agen dan penjualan
+                chart:  x = agennya
+                        y = jumlah penjualan
+        reportnya tahunan dan bulanan
+
+Stok pangan
+    distributor
+    sama seperti CRUD spbu
+
+    setitngan kecamatan keluarahan dan kecamatan
+        tabel kecamatan
+            table keluarahan = per keluarahan diberikan foreignkey kecamatan
+
+    komonditas
+    CRUD biasa
+
+    TransaksiStokPangan
+    data komonditas diambil dari table komonditas di AddTransaksi
+    data toko diambil dari table toko
+
+    data yang ditampilkan adalah data per komoditas
+        distributor | Stokawal | sat | pengadaan | sat | penyaluran | sat | stock akhir | sat
+        
+            total
+
+    Report dipakai nya bulan dan tahun
+
+    -- yang terjadi --
+        transaksi mengambil data komonditas dari table komonditas dan keterangan
+        di bagian distributor hanya penjelasan saja (resiko salah input untuk penjualan)
+
+
+ExportImport
+    Data import  / Export
+        CRUD biasa
+            kecamatan dan keluarana ada di database`
+        Data yang di import cara kerjanya sama 
+            tabel data Impor
+                baranga yang di import  = tiap barang import memiliki foreighkey Perusahaan agar bisa terhubung
+
+    Report data
+        -> Perusahaan, bulan, tahun
+        -> tipe 
+            -> doc
+            -> excel
+            -> pdf
+
+Report
+    -> minta kejelasan rumusan yang dimainakan
+    -> minta data dan apa saja yang ditampilkan di laporannya
+
+Prioritas
+    -> Kepokmas
+    -> Stock pangan
+    -> BBM LPG
+    -> SPBU LPG
+
+Admin
+    -> R
+
+Operator
+    -> CRUD
+
+Viewer
+    -> R (Public)
+

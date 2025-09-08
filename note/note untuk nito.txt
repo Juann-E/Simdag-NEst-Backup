@@ -1,0 +1,43 @@
+fungsi CRUD REalisasi BBM dan LPG dirubah akrena merubah table di database
+
+CREATE TABLE realisasi_bulanan_lpg (
+    id_realisasi_lpg INT AUTO_INCREMENT PRIMARY KEY,
+    id_agen INT NOT NULL,
+    bulan VARCHAR(20) NOT NULL,
+    tahun VARCHAR(4) NOT NULL,
+    realisasi_tabung INT NOT NULL,
+    FOREIGN KEY (id_agen) REFERENCES agen(id_agen)
+);
+
+-- Tabel untuk mencatat realisasi bulanan BBM per SPBU
+CREATE TABLE realisasi_bulanan_bbm (
+    id_realisasi_bbm INT AUTO_INCREMENT PRIMARY KEY,
+    id_spbu INT NOT NULL,
+    id_jenis_bbm INT NOT NULL,
+    bulan VARCHAR(20) NOT NULL,
+    tahun VARCHAR(4) NOT NULL,
+    realisasi_liter DECIMAL(12, 2) NOT NULL,
+    FOREIGN KEY (id_spbu) REFERENCES spbu(id_spbu),
+    FOREIGN KEY (id_jenis_bbm) REFERENCES jenis_bbm(id_jenis_bbm)
+);
+
+dummy data
+
+-- Isi data contoh untuk tabel realisasi_bulanan_lpg TAHUN 2025
+INSERT INTO `realisasi_bulanan_lpg` (`id_agen`, `bulan`, `tahun`, `realisasi_tabung`) VALUES
+(1, 'Januari', '2025', 1400),
+(2, 'Januari', '2025', 1050),
+(3, 'Januari', '2025', 850),
+(1, 'Februari', '2025', 1420),
+(2, 'Februari', '2025', 1150);
+
+-- Isi data contoh untuk tabel realisasi_bulanan_bbm TAHUN 2025
+INSERT INTO `realisasi_bulanan_bbm` (`id_spbu`, `id_jenis_bbm`, `bulan`, `tahun`, `realisasi_liter`) VALUES
+(1, 1, 'Januari', '2025', 28000.00), -- SPBU 1, Pertalite, Jan 2025
+(1, 2, 'Januari', '2025', 17000.50), -- SPBU 1, Pertamax, Jan 2025
+(2, 1, 'Januari', '2025', 35000.00), -- SPBU 2, Pertalite, Jan 2025
+(2, 4, 'Januari', '2025', 19000.00), -- SPBU 2, Solar, Jan 2025
+(1, 1, 'Februari', '2025', 28500.25), -- SPBU 1, Pertalite, Feb 2025
+(2, 5, 'Februari', '2025', 10500.00);   -- SPBU 2, Dexlite, Feb 2025
+
+
