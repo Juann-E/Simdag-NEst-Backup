@@ -68,6 +68,22 @@ export default function ReportAgenLpgPage() {
     }
   };
 
+  // View yearly report data
+  const viewYearlyReportData = async () => {
+    try {
+      if (!yearlyForm.kuota_mt || parseFloat(yearlyForm.kuota_mt) <= 0) {
+        alert('Mohon masukkan kuota metrik ton yang valid (lebih dari 0)');
+        return;
+      }
+      
+      // Navigate to yearly report page with parameters
+      navigate(`/admin/report-agen-lpg/tahunan?year=${yearlyForm.year}&kuota_mt=${yearlyForm.kuota_mt}`);
+    } catch (error) {
+      console.error('Error viewing yearly report data:', error);
+      alert('Gagal membuka halaman laporan tahunan. Silakan coba lagi.');
+    }
+  };
+
   // Download yearly Excel report
   const downloadYearlyExcel = async () => {
     try {
@@ -201,7 +217,7 @@ export default function ReportAgenLpgPage() {
             Download laporan agen LPG tahunan dalam format Excel dengan breakdown per bulan untuk setiap agen.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Tahun
@@ -235,6 +251,19 @@ export default function ReportAgenLpgPage() {
                 onChange={(e) => handleYearlyFormChange('kuota_mt', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+            
+            <div>
+              <button
+                onClick={viewYearlyReportData}
+                className="btn-secondary w-full flex items-center justify-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 mr-2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Lihat Data
+              </button>
             </div>
             
             <div>

@@ -20,6 +20,7 @@ import RealisasiLpgDetailPage from './components/admin/bbm-lpg/RealisasiLpgDetai
 import RealisasiBbmDetail from './components/admin/bbm-lpg/RealisasiBbmDetail';
 import ReportAgenLpgPage from './pages/admin/ReportAgenLpgPage';
 import TentangPage from './pages/TentangPage';
+import TahunanPage from './components/admin/bbm-lpg/Laporan/tahunan';
 
 // ## PATH IMPOR YANG SUDAH DIPERBAIKI ##
 import InputHargaPage from './components/admin/kepokmas/harga_barang_grid/InputHargaPage';
@@ -97,6 +98,7 @@ function App() {
         <Route path="bbm-lpg/realisasi-detail/:agenId" element={<RealisasiLpgDetailPage />} />
         <Route path="bbm-lpg/realisasi-bbm-detail/:id_spbu" element={<RealisasiBbmDetail />} />
         <Route path="report-agen-lpg" element={<ReportAgenLpgPage />} />
+        <Route path="report-agen-lpg/tahunan" element={<TahunanPage />} />
 
         {/* Rute baru untuk halaman input */}
         <Route path="/admin/kepokmas/input-harga/:marketId" element={<InputHargaPage />} />
