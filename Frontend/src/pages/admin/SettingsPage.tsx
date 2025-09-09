@@ -4,11 +4,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import SettingsTabs from '../../components/admin/SettingsTabs';
 import KecamatanSettings from '../../components/admin/settings/KecamatanSettings';
 import KelurahanSettings from '../../components/admin/settings/KelurahanSettings';
+import TeamPhotosSettings from '../../components/admin/settings/TeamPhotosSettings';
 
 // Daftar tab yang valid untuk dicocokkan dengan URL
 const validTabs = {
   'kecamatan': 'Kecamatan',
   'kelurahan': 'Kelurahan',
+  'team-photos': 'Team Photos',
 };
 
 export default function SettingsPage() {
@@ -51,6 +53,8 @@ export default function SettingsPage() {
         return <KecamatanSettings />;
       case 'Kelurahan':
         return <KelurahanSettings />;
+      case 'Team Photos':
+        return <TeamPhotosSettings />;
       default:
         return <KecamatanSettings />;
     }

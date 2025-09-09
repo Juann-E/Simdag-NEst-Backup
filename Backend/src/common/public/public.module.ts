@@ -18,12 +18,13 @@ import { TransaksiStockPangan } from '../../modules/StockPangan/TransaksiStockPa
 import { RealisasiBulananLpg, RealisasiBulananLpgMain } from '../../modules/BBM/Realisasi LPG/realisasi-bulanan-lpg.entity';
 import { RealisasiBulananBbm, RealisasiBulananBbmDetail } from '../../modules/BBM/Realisasi BBM/realisasi-bulanan-bbm.entity';
 import { JenisBbm } from '../../modules/BBM/JenisBbm/jenis-bbm.entity';
+import { TeamPhoto } from '../../modules/team-photos/team-photo.entity';
 import { ReportAgenLpgModule } from '../../modules/BBM/Report Agen LPG/report-agen-lpg.module';
 import { ReportAgenLpgController } from '../../modules/BBM/Report Agen LPG/report-agen-lpg.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([NamaPasar, HargaBarangPasar, BarangPasarGrid, Spbu, Agen, PangkalanLpg, Spbe, Distributor, NamaBarang, KomoditasStockPangan, TransaksiStockPangan, RealisasiBulananLpg, RealisasiBulananLpgMain, RealisasiBulananBbm, RealisasiBulananBbmDetail, JenisBbm]),
+    TypeOrmModule.forFeature([NamaPasar, HargaBarangPasar, BarangPasarGrid, Spbu, Agen, PangkalanLpg, Spbe, Distributor, NamaBarang, KomoditasStockPangan, TransaksiStockPangan, RealisasiBulananLpg, RealisasiBulananLpgMain, RealisasiBulananBbm, RealisasiBulananBbmDetail, JenisBbm, TeamPhoto]),
     ReportAgenLpgModule,
   ],
   controllers: [PublicController, ReportAgenLpgController],

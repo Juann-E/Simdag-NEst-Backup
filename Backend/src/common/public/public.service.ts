@@ -16,6 +16,7 @@ import { TransaksiStockPangan } from '../../modules/StockPangan/TransaksiStockPa
 import { RealisasiBulananLpg, RealisasiBulananLpgMain } from '../../modules/BBM/Realisasi LPG/realisasi-bulanan-lpg.entity';
 import { RealisasiBulananBbm, RealisasiBulananBbmDetail } from '../../modules/BBM/Realisasi BBM/realisasi-bulanan-bbm.entity';
 import { JenisBbm } from '../../modules/BBM/JenisBbm/jenis-bbm.entity';
+import { TeamPhoto } from '../../modules/team-photos/team-photo.entity';
 import { ReportAgenLpgService } from '../../modules/BBM/Report Agen LPG/report-agen-lpg.service';
 import { ReportType } from '../../modules/BBM/Report Agen LPG/dto/report-agen-lpg.dto';
 
@@ -52,6 +53,8 @@ export class PublicService {
     private readonly realisasiBulananBbmDetailRepo: Repository<RealisasiBulananBbmDetail>,
     @InjectRepository(JenisBbm)
     private readonly jenisBbmRepo: Repository<JenisBbm>,
+    @InjectRepository(TeamPhoto)
+    private readonly teamPhotoRepo: Repository<TeamPhoto>,
     private readonly reportAgenLpgService: ReportAgenLpgService,
   ) {}
 
@@ -895,4 +898,73 @@ export class PublicService {
     });
   }
 
+  async findAllTeamPhotos(): Promise<TeamPhoto[]> {
+    return await this.teamPhotoRepo.find({
+      order: { created_at: 'DESC' }
+    });
+  }
+
+  async findActiveTeamPhotos(): Promise<TeamPhoto[]> {
+    return this.teamPhotoRepo.find({
+      where: { is_active: true },
+      order: { created_at: 'DESC' },
+    });
+  }
+
+  async updateTeamPhotoMember(
+    memberId: string,
+    file: Express.Multer.File,
+    updateData: any,
+  ): Promise<TeamPhoto> {
+    // Find existing team photo by memberId or create new one
+    let teamPhoto = await this.teamPhotoRepo.findOne({
+      where: { member_id: memberId },
+    });
+
+    if (!teamPhoto) {
+      // Create new team photo if not exists
+      teamPhoto = this.teamPhotoRepo.create({
+        member_id: memberId,
+        name: updateData.memberName || memberId,
+        position: updateData.position || '',
+        category: updateData.category || 'Tim',
+        nip: updateData.nip,
+        photo: file ? `/uploads/team-photos/${file.filename}` : '',
+        responsibilities: updateData.responsibilities,
+        is_active: true,
+      });
+    } else {
+      // Update existing team photo
+      if (file) {
+        teamPhoto.photo = `/uploads/team-photos/${file.filename}`;
+      }
+      if (updateData.memberName) {
+        teamPhoto.name = updateData.memberName;
+      }
+      if (updateData.position) {
+        teamPhoto.position = updateData.position;
+      }
+      if (updateData.category) {
+        teamPhoto.category = updateData.category;
+      }
+      if (updateData.nip) {
+        teamPhoto.nip = updateData.nip;
+      }
+      if (updateData.responsibilities) {
+        teamPhoto.responsibilities = updateData.responsibilities;
+      }
+      // Set is_active to true by default when uploading photo, unless explicitly set to false
+      if (updateData.isActive !== undefined) {
+        teamPhoto.is_active = updateData.isActive === 'true' || updateData.isActive === true;
+      } else if (file) {
+        // Set to active when uploading a new photo
+        teamPhoto.is_active = true;
+      } else {
+        // Default to true when no file and no isActive specified
+        teamPhoto.is_active = true;
+      }
+    }
+
+    return this.teamPhotoRepo.save(teamPhoto);
+  }
 }

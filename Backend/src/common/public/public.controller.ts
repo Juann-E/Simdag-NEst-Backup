@@ -1,6 +1,9 @@
 // backend/src/modules/public/public.controller.ts
 
-import { Controller, Get, Param, Query, Res } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res, Post, Patch, UseInterceptors, UploadedFile, Body } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import type { Response } from 'express';
 import { PublicService } from './public.service';
 import { Public } from '../decorators/public.decorator';
@@ -174,5 +177,47 @@ export class PublicController {
   @Get('komoditas-stock-pangan')
   findAllKomoditasStockPangan() {
     return this.publicService.findAllKomoditasStockPangan();
+  }
+
+  @Public()
+  @Get('team-photos')
+  findAllTeamPhotos() {
+    return this.publicService.findAllTeamPhotos();
+  }
+
+  @Public()
+  @Get('team-photos/active')
+  findActiveTeamPhotos() {
+    return this.publicService.findActiveTeamPhotos();
+  }
+
+  @Public()
+  @Patch('team-photos/member/:memberId')
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      storage: diskStorage({
+        destination: './uploads/team-photos',
+        filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+          return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
+      },
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+      },
+    }),
+  )
+  updateTeamPhotoMember(
+    @Param('memberId') memberId: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateData: any,
+  ) {
+    return this.publicService.updateTeamPhotoMember(memberId, file, updateData);
   }
 }

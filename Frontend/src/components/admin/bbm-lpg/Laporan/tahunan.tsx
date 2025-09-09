@@ -68,7 +68,7 @@ function TahunanComponent({ year, kuota_mt }: { year: string; kuota_mt: string }
       setIsDownloading(true);
       const token = localStorage.getItem('accessToken');
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-yearly?year=${year}&kuota_mt=${kuota_mt}`,
+        `http://localhost:3000/report-agen-lpg/download-yearly?year=${year}&kuota_mt=${kuota_mt}`,
         {
           responseType: 'blob',
           headers: { Authorization: `Bearer ${token}` }
@@ -325,7 +325,20 @@ export default function Tahunan() {
   const year = searchParams.get('year') || new Date().getFullYear().toString();
   const kuota_mt = searchParams.get('kuota_mt') || '0';
 
-  return <TahunanComponent year={year} kuota_mt={kuota_mt} />;
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-4 p-6 bg-white rounded-lg shadow-sm border">
+        <h2 className="text-xl font-semibold text-gray-800">Laporan Tahunan LPG</h2>
+        <button
+          onClick={() => window.history.back()}
+          className="btn-secondary flex items-center"
+        >
+          ← Kembali
+        </button>
+      </div>
+      <TahunanComponent year={year} kuota_mt={kuota_mt} />
+    </div>
+  );
 }
 
 // Export juga komponen utama untuk digunakan sebagai props

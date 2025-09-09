@@ -253,6 +253,9 @@ export default function Sidebar() {
             <NavLink to="/admin/settings/kelurahan" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
               Kelurahan
             </NavLink>
+            <NavLink to="/admin/settings/team-photos" className={({ isActive }) => isActive ? activeSubLinkClass : subLinkClass}>
+              Team Photos
+            </NavLink>
           </div>
         )}
       </nav>

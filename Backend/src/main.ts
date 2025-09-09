@@ -19,6 +19,19 @@ async function bootstrap() {
   });
   // ===================================================
 
+  // Add request logging middleware
+  app.use((req, res, next) => {
+    if (req.url.includes('/team-photos/member/')) {
+      console.log(`\n=== INCOMING REQUEST ===`);
+      console.log(`Method: ${req.method}`);
+      console.log(`URL: ${req.url}`);
+      console.log(`Headers:`, req.headers);
+      console.log(`Body:`, req.body);
+      console.log(`========================\n`);
+    }
+    next();
+  });
+
   // validasi global DTO
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,      

@@ -35,7 +35,7 @@ export default function ReportAgenLpg() {
       const token = localStorage.getItem('accessToken');
 
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
+        `http://localhost:3000/report-agen-lpg/download-monthly?month=${month}&year=${year}`,
         {
           responseType: 'blob',
           headers: { Authorization: `Bearer ${token}` }
@@ -72,7 +72,7 @@ export default function ReportAgenLpg() {
       setIsDownloadingYearly(true);
       const token = localStorage.getItem('accessToken');
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-yearly?year=${yearlyForm.year}&kuota_mt=${yearlyForm.kuota_mt}`,
+        `http://localhost:3000/report-agen-lpg/download-yearly?year=${yearlyForm.year}&kuota_mt=${yearlyForm.kuota_mt}`,
         {
           responseType: 'blob',
           headers: { Authorization: `Bearer ${token}` }
@@ -183,7 +183,7 @@ export default function ReportAgenLpg() {
             </label>
             <input
               id="kuota_mt" type="number" name="kuota_mt" value={yearlyForm.kuota_mt}
-              onChange={handleYearlyFormChange} placeholder="Contoh: 9901" step="0.01" min="0"
+              onChange={handleYearlyFormChange} placeholder="Contoh: 100" step="0.01" min="0"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

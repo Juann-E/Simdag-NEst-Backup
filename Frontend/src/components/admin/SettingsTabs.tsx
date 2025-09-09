@@ -7,7 +7,7 @@ interface SettingsTabsProps {
 }
 
 const SettingsTabs: React.FC<SettingsTabsProps> = ({ activeTab, onTabClick }) => {
-  const tabs = ['Kecamatan', 'Kelurahan'];
+  const tabs = ['Kecamatan', 'Kelurahan', 'Team Photos'];
 
   return (
     <div className="border-b border-gray-200">

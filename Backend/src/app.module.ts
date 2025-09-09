@@ -38,6 +38,9 @@ import { ReportAgenLpgModule } from './modules/BBM/Report Agen LPG/report-agen-l
 // Stock Pangan Modules
 import { StockPanganModule } from './modules/stock-pangan/stock-pangan.module';
 
+// Team Photos Module
+import { TeamPhotoModule } from './modules/team-photos/team-photo.module';
+
 // Common / Public Modules
 import { PublicModule } from './common/public/public.module';
 
@@ -99,6 +102,9 @@ import { PublicModule } from './common/public/public.module';
 
     // Stock Pangan Modules
     StockPanganModule,
+    
+    // Team Photos Module
+    TeamPhotoModule,
     
     // Public access module
     PublicModule,

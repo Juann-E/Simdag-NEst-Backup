@@ -35,7 +35,7 @@ export default function ReportAgenLpgPage() {
       const token = localStorage.getItem('accessToken');
       
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
+        `http://localhost:3000/report-agen-lpg/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
         {
           responseType: 'blob',
           headers: {
@@ -97,7 +97,7 @@ export default function ReportAgenLpgPage() {
       const token = localStorage.getItem('accessToken');
       
       const response = await axios.get(
-        `http://localhost:3000/public/report-agen-lpg/download-yearly?year=${parseInt(yearlyForm.year)}&kuota_mt=${parseFloat(yearlyForm.kuota_mt)}`,
+        `http://localhost:3000/report-agen-lpg/download-yearly?year=${parseInt(yearlyForm.year)}&kuota_mt=${parseFloat(yearlyForm.kuota_mt)}`,
         {
           responseType: 'blob',
           headers: {
@@ -246,7 +246,7 @@ export default function ReportAgenLpgPage() {
                 type="number"
                 step="0.01"
                 min="0"
-                placeholder="Contoh: 9901"
+                placeholder="Contoh: 100"
                 value={yearlyForm.kuota_mt}
                 onChange={(e) => handleYearlyFormChange('kuota_mt', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
