@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 import { 
   Users, 
   Package, 
@@ -39,7 +41,7 @@ export default function StockPanganStats() {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3000/public/stock-pangan-stats');
+        const response = await axios.get(`${API_BASE_URL}/public/stock-pangan-stats`);
         setStats(response.data);
         setError(null);
       } catch (err) {

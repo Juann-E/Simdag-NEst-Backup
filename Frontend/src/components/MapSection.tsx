@@ -5,6 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Perbaikan untuk ikon default Leaflet yang terkadang tidak muncul
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -106,7 +108,7 @@ export default function MapSection({}: MapProps) {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/public/locations');
+        const response = await axios.get(`${API_BASE_URL}/public/locations`);
         setLocations(response.data);
       } catch (error) {
         console.error('Error fetching locations:', error);

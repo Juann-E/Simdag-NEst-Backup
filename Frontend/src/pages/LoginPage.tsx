@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Lock, ArrowLeft, BarChart3 } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -16,7 +18,7 @@ export default function LoginPage() {
 
     try {
       // Menggunakan detail API yang Anda berikan
-      const response = await axios.post('http://localhost:3000/auth/login', {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         username: username,
         password: password,
       });

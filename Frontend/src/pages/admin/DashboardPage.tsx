@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Building2, Package, DatabaseBackup, Car, Users, Fuel, Zap, Truck } from 'lucide-react';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 import PriceChart from '../../components/PriceChart';
 import StockPanganChart from '../../components/StockPanganChart';
 import LpgBbmChart from '../../components/charts/LpgBbmChart';
@@ -59,9 +61,9 @@ export default function DashboardPage() {
 
       try {
         const [marketsRes, itemsRes, dashboardStatsRes] = await Promise.all([
-          axios.get('http://localhost:3000/nama-pasar', { headers }),
-          axios.get('http://localhost:3000/public/items'),
-          axios.get('http://localhost:3000/public/dashboard-stats')
+          axios.get(`${API_BASE_URL}/nama-pasar`, { headers }),
+        axios.get(`${API_BASE_URL}/public/items`),
+        axios.get(`${API_BASE_URL}/public/dashboard-stats`)
         ]);
 
         // 1. Set data statistik
@@ -103,7 +105,7 @@ export default function DashboardPage() {
         if (selectedItemId) params.append('itemId', selectedItemId);
         if (selectedMarketId) params.append('marketId', selectedMarketId);
         
-        const url = `http://localhost:3000/public/chart-data${params.toString() ? `?${params.toString()}` : ''}`;
+        const url = `${API_BASE_URL}/public/chart-data${params.toString() ? `?${params.toString()}` : ''}`;
         const response = await axios.get(url);
         
         setChartData(response.data.chartData || []);

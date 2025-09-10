@@ -5,6 +5,8 @@ import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Package } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface Distributor {
   id: number;
   nama_distributor: string;
@@ -34,8 +36,8 @@ export default function StockPanganChart() {
     const fetchDropdownData = async () => {
       try {
         const [distributorResponse, komoditasResponse] = await Promise.all([
-          axios.get('http://localhost:3000/public/distributors'),
-          axios.get('http://localhost:3000/public/komoditas-stock-pangan')
+          axios.get(`${API_BASE_URL}/public/distributors`),
+          axios.get(`${API_BASE_URL}/public/komoditas-stock-pangan`)
         ]);
         
         setDistributors(distributorResponse.data);
@@ -63,7 +65,7 @@ export default function StockPanganChart() {
           params.append('komoditasId', selectedKomoditas);
         }
         
-        const url = `http://localhost:3000/public/stock-pangan-chart-data${params.toString() ? '?' + params.toString() : ''}`;
+        const url = `${API_BASE_URL}/public/stock-pangan-chart-data${params.toString() ? '?' + params.toString() : ''}`;
         const response = await axios.get(url);
         const { chartData, chartLines } = response.data;
         setChartData(chartData);
