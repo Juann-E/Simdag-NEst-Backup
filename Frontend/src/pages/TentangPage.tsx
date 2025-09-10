@@ -6,7 +6,7 @@ import { ArrowLeft, Users, Target, Award, ChartColumn, Building, Eye, Heart } fr
 import TeamModal from '../components/TeamModal';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = ${API_BASE_URL};
 
 interface TeamPhoto {
   id: number;

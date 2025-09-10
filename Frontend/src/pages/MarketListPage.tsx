@@ -14,7 +14,7 @@ import LpgBbmChart from "../components/charts/LpgBbmChart"
 import Footer from "../components/Footer"
 
 // Pastikan URL ini sesuai dengan alamat backend Anda
-const API_BASE_URL = "http://localhost:3000"
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 interface Market {
   id: number

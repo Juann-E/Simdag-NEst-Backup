@@ -10,7 +10,7 @@ interface Unit {
   satuanBarang: string;
 }
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = ${API_BASE_URL};
 
 export default function SatuanBarang() {
   const [units, setUnits] = useState<Unit[]>([]);

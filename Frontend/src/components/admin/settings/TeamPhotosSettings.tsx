@@ -4,7 +4,7 @@ import { Users, Upload, Trash2, Camera, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import PhotoModal from '../../PhotoModal';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = ${API_BASE_URL};
 
 interface TeamMember {
   id: string;

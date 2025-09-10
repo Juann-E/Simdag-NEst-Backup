@@ -21,7 +21,7 @@ interface Spbu {
   id_kelurahan?: number;
 }
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = ${API_BASE_URL};
 
 // Fungsi untuk membuka Google Maps
 const openGoogleMaps = (latitude?: number, longitude?: number) => {

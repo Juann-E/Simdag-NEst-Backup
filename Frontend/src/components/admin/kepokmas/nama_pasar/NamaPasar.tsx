@@ -17,7 +17,7 @@ interface Market {
   longitude?: number; // Field hasil konversi backend
 }
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = ${API_BASE_URL};
 
 const createImageUrl = (path?: string) => {
   if (!path) return null;

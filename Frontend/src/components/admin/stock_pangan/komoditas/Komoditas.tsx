@@ -19,7 +19,7 @@ interface Komoditas {
 
 
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = ${API_BASE_URL};
 const ITEMS_PER_PAGE = 10;
 
 const Komoditas = () => {
