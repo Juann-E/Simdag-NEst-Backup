@@ -5,19 +5,18 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // ===================================================
-  // ===== TAMBAHKAN BARIS INI UNTUK MENGIZINKAN KONEKSI DARI FRONTEND =====
   app.enableCors({
     origin: [
       'http://localhost:5173', // Frontend development
       'http://localhost:3000', // Local testing
-      'https://simdag-salatiga-deploy.netlify.app', 'https://simdag-nest-backup-production.up.railway.app/' // Production (replace with actual domain)
+      'https://simdag-salatiga-deploy.netlify.app', 
+      'https://simdag-nest-backup-production.up.railway.app' // Production (replace with actual domain)
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   });
-  // ===================================================
+
 
   // Add request logging middleware
   app.use((req, res, next) => {
