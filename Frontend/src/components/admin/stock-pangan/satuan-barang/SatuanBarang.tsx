@@ -162,7 +162,7 @@ export default function SatuanBarang() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {paginatedUnits.map((unit, index) => (
+              {paginatedUnits.map((unit) => (
                 <tr key={unit.idSatuan} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {unit.satuanBarang}

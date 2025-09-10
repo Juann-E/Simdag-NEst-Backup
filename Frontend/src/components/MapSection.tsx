@@ -70,7 +70,7 @@ function ChangeMapView({ center }: { center: LatLngExpression }) {
   return null;
 }
 
-export default function MapSection({ selectedLocation }: MapProps) {
+export default function MapSection({}: MapProps) {
   const [locations, setLocations] = useState<LocationData>({
     markets: [],
     spbu: [],
@@ -118,10 +118,7 @@ export default function MapSection({ selectedLocation }: MapProps) {
     fetchLocations();
   }, []);
 
-  // Tentukan posisi tengah awal
-  const initialCenter: LatLngExpression = selectedLocation && selectedLocation.latitude && selectedLocation.longitude
-    ? [selectedLocation.latitude, selectedLocation.longitude]
-    : [-7.3311396711663885, 110.50496997524012]; // Koordinat default
+
 
   // Gabungkan semua lokasi yang visible
   const allVisibleLocations = [

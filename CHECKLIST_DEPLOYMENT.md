@@ -2,21 +2,21 @@
 
 ## 📋 Persiapan Lokal
 
-- [ ] **Build Frontend**
+<!-- - [ ] **Build Frontend** -->
   ```bash
   cd Frontend
   npm run build
   ```
   ✅ Hasil: Folder `dist` terbuat di Frontend
 
-- [ ] **Build Backend**
+<!-- - [ ] **Build Backend** -->
   ```bash
   cd Backend
   npm run build
   ```
   ✅ Hasil: Folder `dist` terbuat di Backend
 
-- [ ] **Jalankan Script Deployment**
+<!-- - [ ] **Jalankan Script Deployment** -->
   ```bash
   deploy-to-server.bat
   ```

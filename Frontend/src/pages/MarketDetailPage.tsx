@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { TrendingUp, TrendingDown, ArrowLeft, Calendar } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowLeft } from 'lucide-react';
 
 const API_BASE_URL = 'http://localhost:3000';
 

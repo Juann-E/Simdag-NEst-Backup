@@ -267,7 +267,7 @@ export default function Distributor() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredDistributors.map((distributor, index) => (
+              {filteredDistributors.map((distributor) => (
                 <tr key={distributor.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{distributor.nama_distributor}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{distributor.nama_kecamatan}</td>

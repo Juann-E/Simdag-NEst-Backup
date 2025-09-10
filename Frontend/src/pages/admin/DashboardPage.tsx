@@ -8,14 +8,6 @@ import StockPanganChart from '../../components/StockPanganChart';
 import LpgBbmChart from '../../components/charts/LpgBbmChart';
 
 // Definisikan tipe data untuk membantu kita
-interface PriceHistoryItem {
-  harga: number;
-  tanggal_harga: string;
-  barangPasar: {
-    pasar: { id: number; }; // Diperlukan untuk filtering
-    barang: { namaBarang: string; };
-  };
-}
 
 interface Market {
   id: number;
@@ -42,7 +34,7 @@ export default function DashboardPage() {
   const [komoditasStockPanganCount, setKomoditasStockPanganCount] = useState(0);
 
   // State untuk data mentah
-  const [allPrices, setAllPrices] = useState<PriceHistoryItem[]>([]);
+
   const [allMarkets, setAllMarkets] = useState<Market[]>([]);
   const [items, setItems] = useState<Item[]>([]);
 

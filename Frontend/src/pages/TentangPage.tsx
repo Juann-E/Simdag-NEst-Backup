@@ -1,6 +1,6 @@
 // src/pages/TentangPage.tsx
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Users, Target, Award, ChartColumn, Building, Eye, Heart } from 'lucide-react';
 import TeamModal from '../components/TeamModal';

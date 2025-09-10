@@ -1,10 +1,8 @@
 // src/components/admin/bbm-lpg/RealisasiBulananBbm.tsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Building, Search, PlusCircle } from 'lucide-react';
-import { getAuthToken } from '../../../utils/auth';
-import { spbuService, realisasiBulananBbmService } from '../../../services/bbmLpgService';
+import { spbuService } from '../../../services/bbmLpgService';
 
 interface Spbu {
   id_spbu: number;
@@ -23,14 +21,7 @@ interface Spbu {
   };
 }
 
-interface RealisasiBbm {
-  id_realisasi_bbm: number;
-  id_spbu: number;
-  keterangan?: string;
-  created_at: string;
-  updated_at: string;
-  spbu: Spbu;
-}
+
 
 export default function RealisasiBulananBbm() {
   const navigate = useNavigate();

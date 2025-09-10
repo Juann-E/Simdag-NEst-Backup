@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { PlusCircle, Search, Building } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getAuthToken } from '../../../utils/auth';
+
 
 // Interface definitions
 interface Agen {

@@ -47,7 +47,6 @@ export default function PriceChart({
   selectedItemId,
   onMarketChange,
   onItemChange,
-  loading,
   chartTitle = "Tren Harga Komoditas",
   chartSubtitle = "Pergerakan harga bahan pokok utama yang tercatat dari semua pasar."
 }: PriceChartProps) {

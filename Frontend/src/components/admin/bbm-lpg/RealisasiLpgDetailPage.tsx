@@ -43,12 +43,7 @@ const BULAN_OPTIONS = [
   { value: '12', label: 'Desember' }
 ];
 
-// Helper function to convert month number to name
-const getMonthName = (monthNumber: number): string => {
-  const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
-                     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-  return monthNames[monthNumber - 1] || '';
-};
+
 
 // Jumlah item per halaman
 const ITEMS_PER_PAGE = 10;
@@ -121,7 +116,7 @@ export default function RealisasiLpgDetailPage() {
   const filteredData = useMemo(() =>
     realisasiData.filter(item => {
       const searchLower = searchTerm.toLowerCase();
-      const itemDate = new Date(item.tanggal);
+      const itemDate = new Date(item.periode);
       const monthName = itemDate.toLocaleDateString('id-ID', { month: 'long' });
       const year = itemDate.getFullYear().toString();
       return (
@@ -172,7 +167,7 @@ export default function RealisasiLpgDetailPage() {
       setRealisasiTabung('');
 
       // Success notification removed
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Gagal menambahkan data realisasi.";
       alert(errorMessage);
     }
@@ -226,7 +221,7 @@ export default function RealisasiLpgDetailPage() {
       setEditRealisasiTabung('');
 
 
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Gagal menyimpan perubahan data realisasi.";
       alert(errorMessage);
     }

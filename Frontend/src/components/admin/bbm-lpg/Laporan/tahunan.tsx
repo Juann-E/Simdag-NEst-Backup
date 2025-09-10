@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { DocumentArrowDownIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -63,32 +63,7 @@ function TahunanComponent({ year, kuota_mt }: { year: string; kuota_mt: string }
     fetchData();
   }, [year, kuota_mt]);
 
-  const downloadRawExcel = async () => {
-    try {
-      setIsDownloading(true);
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.get(
-        `http://localhost:3000/report-agen-lpg/download-yearly?year=${year}&kuota_mt=${kuota_mt}`,
-        {
-          responseType: 'blob',
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Laporan_LPG_Tahunan_${year}.xlsx`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading raw excel:', error);
-      alert('Gagal mengunduh file Excel.');
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+
 
   const downloadPDF = async () => {
     try {

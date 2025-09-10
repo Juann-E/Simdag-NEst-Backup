@@ -17,11 +17,7 @@ interface Komoditas {
   satuan: Unit;
 }
 
-interface FormData {
-  komoditas: string;
-  keterangan: string;
-  id_satuan: string;
-}
+
 
 const API_BASE_URL = 'http://localhost:3000';
 const ITEMS_PER_PAGE = 10;

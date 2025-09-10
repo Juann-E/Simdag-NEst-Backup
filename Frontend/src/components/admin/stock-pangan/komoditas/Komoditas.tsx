@@ -269,7 +269,7 @@ const Komoditas: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                currentItems.map((item, index) => (
+                currentItems.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       {item.gambar ? (

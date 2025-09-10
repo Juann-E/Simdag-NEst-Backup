@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Plus, Edit, Trash2, Calendar, Fuel } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, Calendar } from 'lucide-react';
 import Modal from '../../ui/Modal';
 import ConfirmationModal from '../../ui/ConfirmationModal';
 import { getAuthToken } from '../../../utils/auth';
@@ -26,6 +26,7 @@ interface RealisasiDetail {
     penanggung_jawab: string;
   };
   jenisBbm: JenisBbm;
+  periode?: string;
 }
 
 interface RealisasiBbm {
@@ -38,6 +39,7 @@ interface RealisasiBbm {
     penanggung_jawab: string;
   };
   details: RealisasiDetail[];
+  keterangan?: string;
 }
 
 
@@ -574,7 +576,7 @@ export default function RealisasiBbmDetail() {
               min="0"
               step="0.01"
               value={formData.realisasi_liter}
-              onChange={(e) => setFormData({...formData, realisasi_liter: parseFloat(e.target.value) || ''})}
+              onChange={(e) => setFormData({...formData, realisasi_liter: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Masukkan jumlah realisasi dalam liter"
               required
@@ -605,9 +607,7 @@ export default function RealisasiBbmDetail() {
         onClose={() => setDetailToDelete(null)}
         onConfirm={handleDeleteDetail}
         title="Hapus Data Realisasi"
-        message={`Apakah Anda yakin ingin menghapus data realisasi ${detailToDelete?.periode} untuk ${detailToDelete?.jenisBbm?.jenis_bbm}?`}
-        confirmText="Hapus"
-        cancelText="Batal"
+        message={`Apakah Anda yakin ingin menghapus data realisasi ${detailToDelete?.bulan}/${detailToDelete?.tahun} untuk ${detailToDelete?.jenisBbm?.jenis_bbm}?`}
       />
     </>
   );

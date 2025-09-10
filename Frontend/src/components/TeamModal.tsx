@@ -1,6 +1,6 @@
 // src/components/TeamModal.tsx
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Users } from 'lucide-react';
 import PhotoModal from './PhotoModal';
 

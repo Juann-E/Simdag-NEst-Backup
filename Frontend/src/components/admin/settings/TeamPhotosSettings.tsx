@@ -1,6 +1,6 @@
 // src/components/admin/settings/TeamPhotosSettings.tsx
 import { useState, useEffect } from 'react';
-import { Users, Upload, Save, Trash2, Camera, AlertCircle } from 'lucide-react';
+import { Users, Upload, Trash2, Camera, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import PhotoModal from '../../PhotoModal';
 
@@ -125,7 +125,7 @@ export default function TeamPhotosSettings() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-  const [syncing, setSyncing] = useState<boolean>(false);
+
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<{url: string, name: string} | null>(null);
 
@@ -266,7 +266,7 @@ export default function TeamPhotosSettings() {
       formData.append('category', member.category);
       formData.append('nip', member.nip || '');
       formData.append('responsibilities', member.responsibilities || '');
-      formData.append('isActive', true);
+      formData.append('isActive', 'true');
 
       const response = await axios.patch(`${API_BASE_URL}/public/team-photos/member/${memberId}`, formData, {
         headers: {
@@ -333,25 +333,7 @@ export default function TeamPhotosSettings() {
     }
   };
 
-  const handleSyncAllMembers = async () => {
-    setSyncing(true);
-    setErrorMessage('');
-    
-    try {
-      for (const member of teamMembers) {
-        await syncMemberToBackend(member);
-      }
-      setSuccessMessage('Semua anggota tim berhasil disinkronisasi');
-      setTimeout(() => setSuccessMessage(''), 3000);
-      
-      // Reload team photos after sync
-      await loadTeamPhotos();
-    } catch (error) {
-      setErrorMessage('Gagal melakukan sinkronisasi');
-    } finally {
-      setSyncing(false);
-    }
-  };
+
 
   const groupedMembers = teamMembers.reduce((acc, member) => {
     if (!acc[member.category]) {
