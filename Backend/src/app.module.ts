@@ -64,8 +64,9 @@ import { PublicModule } from './common/public/public.module';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, ssl: {
-        rejectUnauthorized: true, 
+      synchronize: false,  ssl: {
+        rejectUnauthorized: true,
+        ca: process.env.DB_CA_CERT, // Langsung baca dari variabel baru
       }
     }),
 
