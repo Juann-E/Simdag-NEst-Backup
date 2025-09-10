@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:5173', // Frontend development
       'http://localhost:3000', // Local testing
-      'https://your-frontend-domain.com' // Production (replace with actual domain)
+      'https://simdag-salatiga-deploy.netlify.app' // Production (replace with actual domain)
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
