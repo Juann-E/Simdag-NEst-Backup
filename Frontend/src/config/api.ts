@@ -33,6 +33,7 @@ export const API_CONFIG = {
     REALISASI_BULANAN_BBM: '/realisasi-bulanan-bbm'
   }
 };
+  console.log("API BASE URL:", API_CONFIG.BASE_URL);
 
 // Helper function to build full URL
 export const buildApiUrl = (endpoint: string): string => {
