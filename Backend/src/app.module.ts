@@ -64,7 +64,9 @@ import { PublicModule } from './common/public/public.module';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false
+      synchronize: false, ssl: {
+        rejectUnauthorized: true, 
+      }
     }),
 
     // upload gambar
