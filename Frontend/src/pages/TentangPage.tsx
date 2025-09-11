@@ -846,7 +846,7 @@ export default function TentangPage() {
                   setSelectedMember({
                     name: 'Rangga Prawiro Utomo',
                     position: 'Full Stack Developer',
-                    rank: 'Team Developer UKSW',
+                    rank: 'Team Intern Developer UKSW',
                     nip: '672022017',
                     photo: teamPhotos['rangga-prawiro'],
                     responsibilities: [
