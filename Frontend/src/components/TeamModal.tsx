@@ -62,7 +62,7 @@ export default function TeamModal({ isOpen, onClose, member }: TeamModalProps) {
               <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
               {member.nip && (
                 <p className="text-gray-600 mb-1">
-                  <span className="font-medium">NIP:</span> {member.nip}
+                  <span className="font-medium">NIM:</span> {member.nip}
                 </p>
               )}
               <p className="text-gray-600 mb-1">

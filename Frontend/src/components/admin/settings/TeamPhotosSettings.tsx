@@ -93,7 +93,7 @@ const TEAM_MEMBERS: TeamMember[] = [
   // Tim Pengembang
   {
     id: 'bowo-bisma',
-    name: 'Aryanto Harry Wibowo SH.',
+    name: 'Aryanto Harry Wibowo, SH',
     position: 'Full Stack Developer',
     category: 'Tim Pengembang'
   },

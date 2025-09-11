@@ -805,7 +805,7 @@ export default function TentangPage() {
             <div className="bg-gradient-to-r from-orange-600 to-orange-700 rounded-2xl shadow-lg p-8 text-white">
               <div className="flex items-center gap-3 mb-6">
                 <Users className="w-8 h-8 text-white" />
-                <h2 className="text-2xl font-bold">Tim Pengembang SIMDAG</h2>
+                <h2 className="text-2xl font-bold">Team Development PT. Daterra Kreasi Indonesia</h2>
               </div>
               <p className="text-orange-100 mb-6">
                 SIMDAG dikembangkan oleh tim yang berdedikasi untuk menciptakan solusi teknologi 
@@ -846,7 +846,8 @@ export default function TentangPage() {
                   setSelectedMember({
                     name: 'Rangga Prawiro Utomo',
                     position: 'Full Stack Developer',
-                    rank: 'UI/UX Developer',
+                    rank: 'Team Developer UKSW',
+                    nip: '672022017',
                     photo: teamPhotos['rangga-prawiro'],
                     responsibilities: [
                       'Pengembangan API dan database',
@@ -875,8 +876,9 @@ export default function TentangPage() {
                 <div className="text-center cursor-pointer hover:bg-white/10 p-4 rounded-lg transition-colors" onClick={() => {
                   setSelectedMember({
                     name: 'Juannito Eriyadi',
-                    position: 'Backend Developer',
-                    rank: 'Full Stack Developer',
+                    position: 'Full Stack Developer',
+                    rank: 'Team Intern Developer UKSW',
+                    nip: '672022056',
                     photo: teamPhotos['juanito-eriyadi'],
                     responsibilities: [
                       'Pengembangan antarmuka pengguna',
