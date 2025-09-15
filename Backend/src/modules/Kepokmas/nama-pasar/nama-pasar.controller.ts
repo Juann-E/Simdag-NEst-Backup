@@ -29,10 +29,22 @@ export class NamaPasarController {
     })
   }))
   async create(@Body() dto: CreateNamaPasarDto, @UploadedFile() file?: Express.Multer.File) {
-    if (file) {
-      dto.gambar = file.path;
+    try {
+      console.log('=== CREATE NAMA PASAR ===');
+      console.log('DTO received:', dto);
+      console.log('File received:', file ? { filename: file.filename, path: file.path, size: file.size } : 'No file');
+      
+      if (file) {
+        dto.gambar = file.path;
+      }
+      
+      const result = await this.namaPasarService.create(dto);
+      console.log('Create result:', result);
+      return result;
+    } catch (error) {
+      console.error('Error in create nama pasar:', error);
+      throw error;
     }
-    return this.namaPasarService.create(dto);
   }
 
   @Get()
@@ -53,10 +65,23 @@ export class NamaPasarController {
     })
   }))
   async update(@Param('id') id: string, @Body() dto: UpdateNamaPasarDto, @UploadedFile() file?: Express.Multer.File) {
-    if (file) {
-      dto.gambar = file.path;
+    try {
+      console.log('=== UPDATE NAMA PASAR ===');
+      console.log('ID:', id);
+      console.log('DTO received:', dto);
+      console.log('File received:', file ? { filename: file.filename, path: file.path, size: file.size } : 'No file');
+      
+      if (file) {
+        dto.gambar = file.path;
+      }
+      
+      const result = await this.namaPasarService.update(+id, dto);
+      console.log('Update result:', result);
+      return result;
+    } catch (error) {
+      console.error('Error in update nama pasar:', error);
+      throw error;
     }
-    return this.namaPasarService.update(+id, dto);
   }
 
   @Delete(':id')
