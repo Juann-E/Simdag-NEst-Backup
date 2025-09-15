@@ -7,6 +7,8 @@ import Modal from '../../ui/Modal';
 import ConfirmationModal from '../../ui/ConfirmationModal';
 import { getAuthToken } from '../../../utils/auth';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface JenisBbm {
   id_jenis_bbm: number;
   jenis_bbm: string;
@@ -91,7 +93,7 @@ export default function RealisasiBbmDetail() {
   const fetchRealisasiData = async () => {
     try {
       // Fetch SPBU data
-      const spbuResponse = await axios.get('http://localhost:3000/public/spbu', { timeout: 10000 });
+      const spbuResponse = await axios.get(`${API_BASE_URL}/public/spbu`, { timeout: 10000 });
       const spbuData = spbuResponse.data.find((s: any) => s.id_spbu === parseInt(id_spbu!));
       
       if (!spbuData) {
@@ -99,7 +101,7 @@ export default function RealisasiBbmDetail() {
       }
       
       // Fetch realisasi data for this SPBU using public endpoint
-      const realisasiResponse = await axios.get(`http://localhost:3000/public/realisasi-bulanan-bbm/spbu/${id_spbu}`, { timeout: 10000 });
+      const realisasiResponse = await axios.get(`${API_BASE_URL}/public/realisasi-bulanan-bbm/spbu/${id_spbu}`, { timeout: 10000 });
       
       // Map the response data to match our interface
       const mappedDetails = (realisasiResponse.data || []).map((item: any) => ({
@@ -138,7 +140,7 @@ export default function RealisasiBbmDetail() {
     try {
       console.log('fetchJenisBbmList: Starting fetch...');
       // Menggunakan endpoint public untuk jenis BBM
-      const response = await axios.get('http://localhost:3000/public/jenis-bbm', { 
+      const response = await axios.get(`${API_BASE_URL}/public/jenis-bbm`, { 
         timeout: 10000
       });
       console.log('fetchJenisBbmList: Response received:', response.data?.length, 'items');
@@ -162,7 +164,7 @@ export default function RealisasiBbmDetail() {
         realisasi_liter: parseFloat(formData.realisasi_liter)
       };
       
-      await axios.post(`http://localhost:3000/realisasi-bulanan-bbm`, detailData, {
+      await axios.post(`${API_BASE_URL}/realisasi-bulanan-bbm`, detailData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -194,7 +196,7 @@ export default function RealisasiBbmDetail() {
         tahun: formData.tahun,
         realisasi_liter: parseFloat(formData.realisasi_liter)
       };
-      await axios.patch(`http://localhost:3000/realisasi-bulanan-bbm/${editingDetail.id_realisasi_bbm}`, updateData, {
+      await axios.patch(`${API_BASE_URL}/realisasi-bulanan-bbm/${editingDetail.id_realisasi_bbm}`, updateData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -217,7 +219,7 @@ export default function RealisasiBbmDetail() {
     
     try {
       const token = getAuthToken();
-      await axios.delete(`http://localhost:3000/realisasi-bulanan-bbm/${detailToDelete.id_realisasi_bbm}`, {
+      await axios.delete(`${API_BASE_URL}/realisasi-bulanan-bbm/${detailToDelete.id_realisasi_bbm}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

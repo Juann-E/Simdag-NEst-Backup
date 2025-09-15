@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface MonthlyReportForm {
   monthYear: string;
 }
@@ -28,7 +30,7 @@ export default function ReportBbm() {
       const [year, month] = monthlyForm.monthYear.split('-');
       
       const response = await axios.get(
-        `http://localhost:3000/public/report-bbm/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
+        `${API_BASE_URL}/public/report-bbm/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
         {
           responseType: 'blob'
         }
@@ -64,7 +66,7 @@ export default function ReportBbm() {
       setIsDownloadingYearly(true);
       
       const response = await axios.get(
-        `http://localhost:3000/public/report-bbm/download-yearly?year=${parseInt(yearlyForm.year)}`,
+        `${API_BASE_URL}/public/report-bbm/download-yearly?year=${parseInt(yearlyForm.year)}`,
         {
           responseType: 'blob'
         }

@@ -97,11 +97,11 @@ export default function Spbu() {
   };
 
   const fetchSpbu = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) { return; }
 
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/spbu`, {
+      const response = await axios.get(`${API_BASE_URL}/spbu`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSpbuList(response.data);

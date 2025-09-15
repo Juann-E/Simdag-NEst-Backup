@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Building, Plus, Edit, Trash2, Search } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface Kecamatan {
   id_kecamatan: number;
   nama_kecamatan: string;
@@ -25,7 +27,7 @@ export default function KecamatanSettings() {
   const fetchKecamatan = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3000/kecamatan', {
+      const response = await fetch(`${API_BASE_URL}/kecamatan`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -57,7 +59,7 @@ export default function KecamatanSettings() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3000/kecamatan', {
+      const response = await fetch(`${API_BASE_URL}/kecamatan`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -83,7 +85,7 @@ export default function KecamatanSettings() {
     
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3000/kecamatan/${selectedKecamatan.id_kecamatan}`, {
+      const response = await fetch(`${API_BASE_URL}/kecamatan/${selectedKecamatan.id_kecamatan}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -109,7 +111,7 @@ export default function KecamatanSettings() {
     
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3000/kecamatan/${selectedKecamatan.id_kecamatan}`, {
+      const response = await fetch(`${API_BASE_URL}/kecamatan/${selectedKecamatan.id_kecamatan}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

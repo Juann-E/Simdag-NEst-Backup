@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Definisikan tipe data yang lebih detail
 interface Market { id: number; nama_pasar: string; }
 interface Item { id: number; namaBarang: string; }
@@ -32,9 +34,9 @@ export default function Report() {
       const headers = { Authorization: `Bearer ${token}` };
       try {
         const [marketsRes, itemsRes, gridRes] = await Promise.all([
-          axios.get('http://localhost:3000/nama-pasar', { headers }),
-          axios.get('http://localhost:3000/nama-barang', { headers }),
-          axios.get('http://localhost:3000/barang-pasar-grid', { headers }),
+          axios.get(`${API_BASE_URL}/nama-pasar`, { headers }),
+          axios.get(`${API_BASE_URL}/nama-barang`, { headers }),
+          axios.get(`${API_BASE_URL}/barang-pasar-grid`, { headers }),
         ]);
         setAllMarkets(marketsRes.data.map((m: Market) => ({ value: m.id, label: m.nama_pasar })));
         setAllItems(itemsRes.data.map((i: Item) => ({ value: i.id, label: i.namaBarang })));
@@ -93,7 +95,7 @@ export default function Report() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/report/${fileType}`,
+        `${API_BASE_URL}/report/${fileType}`,
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },

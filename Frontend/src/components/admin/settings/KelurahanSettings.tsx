@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Building, Plus, Edit, Trash2, Search } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface Kecamatan {
   id_kecamatan: number;
   nama_kecamatan: string;
@@ -34,7 +36,7 @@ export default function KelurahanSettings() {
   const fetchKelurahan = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3000/kelurahan', {
+      const response = await fetch(`${API_BASE_URL}/kelurahan`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -54,7 +56,7 @@ export default function KelurahanSettings() {
   const fetchKecamatan = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3000/kecamatan', {
+      const response = await fetch(`${API_BASE_URL}/kecamatan`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -89,7 +91,7 @@ export default function KelurahanSettings() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3000/kelurahan', {
+      const response = await fetch(`${API_BASE_URL}/kelurahan`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -115,7 +117,7 @@ export default function KelurahanSettings() {
     
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3000/kelurahan/${selectedKelurahan.id_kelurahan}`, {
+      const response = await fetch(`${API_BASE_URL}/kelurahan/${selectedKelurahan.id_kelurahan}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -141,7 +143,7 @@ export default function KelurahanSettings() {
     
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch(`http://localhost:3000/kelurahan/${selectedKelurahan.id_kelurahan}`, {
+      const response = await fetch(`${API_BASE_URL}/kelurahan/${selectedKelurahan.id_kelurahan}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

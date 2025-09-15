@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import { LayoutGrid, PlusCircle, Search } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface Market {
   id: number;
   nama_pasar: string;
@@ -28,7 +30,7 @@ export default function BarangPasarGrid() {
       const token = localStorage.getItem('accessToken');
       if (!token) { setError("Autentikasi gagal."); setLoading(false); return; }
       try {
-        const response = await axios.get('http://localhost:3000/nama-pasar', {
+        const response = await axios.get(`${API_BASE_URL}/nama-pasar`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMarkets(response.data);

@@ -10,6 +10,7 @@ interface Unit {
   satuanBarang: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 const ITEMS_PER_PAGE = 10; // Tentukan jumlah item per halaman
 
 export default function SatuanBarang() {
@@ -37,7 +38,7 @@ export default function SatuanBarang() {
     const token = localStorage.getItem('accessToken');
     if (!token) { setError("Autentikasi gagal."); setLoading(false); return; }
     try {
-      const response = await axios.get('http://localhost:3000/satuan-barang', {
+      const response = await axios.get(`${API_BASE_URL}/satuan-barang`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUnits(response.data);
@@ -84,8 +85,8 @@ export default function SatuanBarang() {
     if (!token) { alert("Sesi berakhir, silakan login kembali."); return; }
 
     const url = editingUnit 
-      ? `http://localhost:3000/satuan-barang/${editingUnit.idSatuan}` 
-      : 'http://localhost:3000/satuan-barang';
+      ? `${API_BASE_URL}/satuan-barang/${editingUnit.idSatuan}` 
+      : `${API_BASE_URL}/satuan-barang`;
       
     const method = editingUnit ? 'patch' : 'post';
 
@@ -112,7 +113,7 @@ export default function SatuanBarang() {
     if (!token) { alert("Sesi berakhir, silakan login kembali."); return; }
 
     try {
-      await axios.delete(`http://localhost:3000/satuan-barang/${unitToDelete.idSatuan}`, {
+      await axios.delete(`${API_BASE_URL}/satuan-barang/${unitToDelete.idSatuan}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

@@ -3,6 +3,8 @@ import { DocumentArrowDownIcon, EyeIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import { TahunanComponent } from './Laporan/tahunan';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Interface untuk mendefinisikan bentuk data form
 interface MonthlyReportForm {
   monthYear: string;
@@ -35,7 +37,7 @@ export default function ReportAgenLpg() {
       const token = localStorage.getItem('accessToken');
 
       const response = await axios.get(
-        `http://localhost:3000/report-agen-lpg/download-monthly?month=${month}&year=${year}`,
+        `${API_BASE_URL}/report-agen-lpg/download-monthly?month=${month}&year=${year}`,
         {
           responseType: 'blob',
           headers: { Authorization: `Bearer ${token}` }
@@ -72,7 +74,7 @@ export default function ReportAgenLpg() {
       setIsDownloadingYearly(true);
       const token = localStorage.getItem('accessToken');
       const response = await axios.get(
-        `http://localhost:3000/report-agen-lpg/download-yearly?year=${yearlyForm.year}&kuota_mt=${yearlyForm.kuota_mt}`,
+        `${API_BASE_URL}/report-agen-lpg/download-yearly?year=${yearlyForm.year}&kuota_mt=${yearlyForm.kuota_mt}`,
         {
           responseType: 'blob',
           headers: { Authorization: `Bearer ${token}` }

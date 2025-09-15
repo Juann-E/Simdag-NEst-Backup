@@ -9,6 +9,8 @@ import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Registrasi komponen Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -45,7 +47,7 @@ function TahunanComponent({ year, kuota_mt }: { year: string; kuota_mt: string }
         setLoading(true);
         const token = localStorage.getItem('accessToken');
         const response = await axios.get(
-          `http://localhost:3000/report-agen-lpg/yearly-data?year=${year}&kuota_mt=${kuota_mt}`,
+          `${API_BASE_URL}/report-agen-lpg/yearly-data?year=${year}&kuota_mt=${kuota_mt}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setData(response.data);
@@ -54,7 +56,7 @@ function TahunanComponent({ year, kuota_mt }: { year: string; kuota_mt: string }
         console.error('Error fetching yearly data:', err);
         console.error('Error response:', err.response?.data);
         console.error('Error status:', err.response?.status);
-        console.error('Request URL:', `http://localhost:3000/report-agen-lpg/yearly-data?year=${year}&kuota_mt=${kuota_mt}`);
+        console.error('Request URL:', `${API_BASE_URL}/report-agen-lpg/yearly-data?year=${year}&kuota_mt=${kuota_mt}`);
         setError(`Gagal memuat data laporan: ${err.response?.data?.message || err.message || 'Unknown error'}`);
       } finally {
         setLoading(false);

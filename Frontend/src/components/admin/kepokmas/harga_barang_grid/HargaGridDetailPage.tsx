@@ -6,6 +6,8 @@ import BulkPriceInputModal from './BulkPriceInputModal';
 import Modal from '../../../ui/Modal';
 import ConfirmationModal from '../../../ui/ConfirmationModal';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Definisikan tipe data
 interface PriceData {
   id_harga: number;
@@ -59,8 +61,8 @@ export default function HargaGridDetailPage() {
 
     try {
       const [marketRes, hargaRes] = await Promise.all([
-        axios.get<Market[]>('http://localhost:3000/nama-pasar', { headers }),
-        axios.get<PriceHistoryItem[]>('http://localhost:3000/harga-barang-pasar', { headers }),
+        axios.get<Market[]>(`${API_BASE_URL}/nama-pasar`, { headers }),
+        axios.get<PriceHistoryItem[]>(`${API_BASE_URL}/harga-barang-pasar`, { headers }),
       ]);
 
       const currentMarket = marketRes.data.find(m => m.id === numericMarketId);
@@ -139,7 +141,7 @@ export default function HargaGridDetailPage() {
     if (!editingItem) return;
     const token = localStorage.getItem('accessToken');
     try {
-      await axios.put(`http://localhost:3000/harga-barang-pasar/${editingItem.id_harga}`, {
+      await axios.put(`${API_BASE_URL}/harga-barang-pasar/${editingItem.id_harga}`, {
         harga: parseInt(formData.harga),
         tanggal_harga: formData.tanggal_harga,
         keterangan: formData.keterangan,
@@ -156,7 +158,7 @@ export default function HargaGridDetailPage() {
     if (!itemToDelete) return;
     const token = localStorage.getItem('accessToken');
     try {
-      await axios.delete(`http://localhost:3000/harga-barang-pasar/${itemToDelete.id_harga}`, {
+      await axios.delete(`${API_BASE_URL}/harga-barang-pasar/${itemToDelete.id_harga}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPriceHistory(priceHistory.filter(p => p.id_harga !== itemToDelete.id_harga));

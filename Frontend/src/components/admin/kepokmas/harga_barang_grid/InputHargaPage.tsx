@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, ChevronLeft, ChevronRight, Save, Copy } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Tipe data
 interface PriceHistoryItem {
   harga: number;
@@ -54,9 +56,9 @@ export default function InputHargaPage() {
         }
 
         const [marketListRes, itemsRes, priceHistoryRes] = await Promise.all([
-          axios.get('http://localhost:3000/nama-pasar', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.post('http://localhost:3000/barang-pasar-grid/filter', { idPasar: numericMarketId }, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:3000/harga-barang-pasar', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get(`${API_BASE_URL}/nama-pasar`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.post(`${API_BASE_URL}/barang-pasar-grid/filter`, { idPasar: numericMarketId }, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${API_BASE_URL}/harga-barang-pasar`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
 
         const currentMarket = marketListRes.data.find((m: Market) => m.id === numericMarketId);
@@ -131,7 +133,7 @@ export default function InputHargaPage() {
           harga: numericHarga,
           tanggal_harga: tanggal,
         };
-        return axios.post('http://localhost:3000/harga-barang-pasar', payload, { headers: { Authorization: `Bearer ${token}` } });
+        return axios.post(`${API_BASE_URL}/harga-barang-pasar`, payload, { headers: { Authorization: `Bearer ${token}` } });
       });
 
     try {

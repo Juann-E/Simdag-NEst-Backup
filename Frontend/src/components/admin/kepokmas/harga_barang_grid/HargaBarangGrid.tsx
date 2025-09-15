@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Table, PlusCircle, Search } from 'lucide-react'; 
+import { Table, PlusCircle, Search } from 'lucide-react';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'; 
 
 interface Market {
   id: number;
@@ -26,7 +28,7 @@ export default function HargaBarangGrid() {
       const token = localStorage.getItem('accessToken');
       if (!token) { setError("Autentikasi gagal."); setLoading(false); return; }
       try {
-        const response = await axios.get('http://localhost:3000/nama-pasar', {
+        const response = await axios.get(`${API_BASE_URL}/nama-pasar`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMarkets(response.data);

@@ -7,6 +7,8 @@ import { Plus, Trash2, ArrowLeft, Search, Edit, Save, ChevronLeft, ChevronRight 
 import Modal from '../../ui/Modal';
 import ConfirmationModal from '../../ui/ConfirmationModal';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Interface untuk tipe data
 interface Market { id: number; nama_pasar: string; }
 interface Unit { idSatuan: number; satuanBarang: string; }
@@ -49,9 +51,9 @@ export default function GridDetailPage() {
 
         try {
           const [marketRes, allItemsRes, gridRes] = await Promise.all([
-            axios.get<Market[]>('http://localhost:3000/nama-pasar', { headers }),
-            axios.get<Item[]>('http://localhost:3000/nama-barang', { headers }),
-            axios.post<GridItem[]>('http://localhost:3000/barang-pasar-grid/filter', { idPasar: numericMarketId }, { headers })
+            axios.get<Market[]>(`${API_BASE_URL}/nama-pasar`, { headers }),
+            axios.get<Item[]>(`${API_BASE_URL}/nama-barang`, { headers }),
+            axios.post<GridItem[]>(`${API_BASE_URL}/barang-pasar-grid/filter`, { idPasar: numericMarketId }, { headers })
               .catch(error => {
                 if (error.response && error.response.status === 404) { return { data: [] }; }
                 throw error;
@@ -103,7 +105,7 @@ export default function GridDetailPage() {
     if (!selectedItemId) return;
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await axios.post('http://localhost:3000/barang-pasar-grid', {
+      const response = await axios.post(`${API_BASE_URL}/barang-pasar-grid`, {
         idPasar: numericMarketId,
         idBarang: parseInt(selectedItemId),
         keterangan: keterangan,
@@ -126,7 +128,7 @@ export default function GridDetailPage() {
     if (!itemToDelete) return;
     const token = localStorage.getItem('accessToken');
     try {
-      await axios.delete(`http://localhost:3000/barang-pasar-grid/${itemToDelete.pasar.id}/${itemToDelete.barang.id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`${API_BASE_URL}/barang-pasar-grid/${itemToDelete.pasar.id}/${itemToDelete.barang.id}`, { headers: { Authorization: `Bearer ${token}` } });
       setGridItems(gridItems.filter(i => i.id_barang_pasar !== itemToDelete.id_barang_pasar));
       setItemToDelete(null);
     } catch (error) {
@@ -143,7 +145,7 @@ export default function GridDetailPage() {
     const token = localStorage.getItem('accessToken');
     try {
       const response = await axios.patch(
-        `http://localhost:3000/barang-pasar-grid/${itemToUpdate.pasar.id}/${itemToUpdate.barang.id}`,
+        `${API_BASE_URL}/barang-pasar-grid/${itemToUpdate.pasar.id}/${itemToUpdate.barang.id}`,
         { keterangan: editKeterangan },
         { headers: { Authorization: `Bearer ${token}` } }
       );

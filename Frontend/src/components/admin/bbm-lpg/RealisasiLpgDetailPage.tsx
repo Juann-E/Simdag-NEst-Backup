@@ -7,6 +7,8 @@ import { Plus, Trash2, ArrowLeft, Search, Edit, Save, ChevronLeft, ChevronRight 
 import Modal from '../../ui/Modal';
 import ConfirmationModal from '../../ui/ConfirmationModal';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Interface untuk tipe data
 interface Agen {
   id_agen: number;
@@ -87,12 +89,12 @@ export default function RealisasiLpgDetailPage() {
 
         try {
           // Fetch agen data
-          const agenRes = await axios.get<Agen[]>('http://localhost:3000/public/agen');
+          const agenRes = await axios.get<Agen[]>(`${API_BASE_URL}/public/agen`);
           const currentAgen = agenRes.data.find(a => a.id_agen === numericAgenId);
           if (currentAgen) setAgen(currentAgen);
 
           // Fetch realisasi data by agen
-          const realisasiRes = await axios.get(`http://localhost:3000/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers })
+          const realisasiRes = await axios.get(`${API_BASE_URL}/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers })
             .catch(error => {
               if (error.response && error.response.status === 404) { return { data: [] }; }
               throw error;
@@ -152,12 +154,12 @@ export default function RealisasiLpgDetailPage() {
         realisasi_tabung: parseInt(realisasiTabung)
       };
       
-      await axios.post('http://localhost:3000/realisasi-bulanan-lpg', newRealisasi, {
+      await axios.post(`${API_BASE_URL}/realisasi-bulanan-lpg`, newRealisasi, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       // Refresh data from server
-      const refreshRes = await axios.get(`http://localhost:3000/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers: { Authorization: `Bearer ${token}` } });
+      const refreshRes = await axios.get(`${API_BASE_URL}/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers: { Authorization: `Bearer ${token}` } });
       setRealisasiData(refreshRes.data || []);
       setError(null);
       
@@ -177,10 +179,10 @@ export default function RealisasiLpgDetailPage() {
     if (!itemToDelete) return;
     const token = localStorage.getItem('accessToken');
     try {
-      await axios.delete(`http://localhost:3000/realisasi-bulanan-lpg/${itemToDelete.id_realisasi_lpg}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`${API_BASE_URL}/realisasi-bulanan-lpg/${itemToDelete.id_realisasi_lpg}`, { headers: { Authorization: `Bearer ${token}` } });
       
       // Refresh data from server after delete
-      const refreshRes = await axios.get(`http://localhost:3000/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers: { Authorization: `Bearer ${token}` } });
+      const refreshRes = await axios.get(`${API_BASE_URL}/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers: { Authorization: `Bearer ${token}` } });
       setRealisasiData(refreshRes.data || []);
       
       setItemToDelete(null);
@@ -202,7 +204,7 @@ export default function RealisasiLpgDetailPage() {
     const token = localStorage.getItem('accessToken');
     try {
       await axios.patch(
-        `http://localhost:3000/realisasi-bulanan-lpg/${itemToUpdate.id_realisasi_lpg}`,
+        `${API_BASE_URL}/realisasi-bulanan-lpg/${itemToUpdate.id_realisasi_lpg}`,
         {
           bulan: parseInt(editBulan),
           tahun: parseInt(editTahun),
@@ -212,7 +214,7 @@ export default function RealisasiLpgDetailPage() {
       );
 
       // Refresh data from server after update
-      const refreshRes = await axios.get(`http://localhost:3000/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers: { Authorization: `Bearer ${token}` } });
+      const refreshRes = await axios.get(`${API_BASE_URL}/realisasi-bulanan-lpg?id_agen=${numericAgenId}`, { headers: { Authorization: `Bearer ${token}` } });
       setRealisasiData(refreshRes.data || []);
 
       setEditingId(null);

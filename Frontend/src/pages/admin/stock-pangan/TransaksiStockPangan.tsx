@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface Distributor {
   id: number;
   nama_distributor: string;
@@ -73,7 +75,7 @@ const TransaksiStockPangan: React.FC = () => {
     }
     
     try {
-      const response = await axios.get('http://localhost:3000/transaksi-stock-pangan', {
+      const response = await axios.get(`${API_BASE_URL}/transaksi-stock-pangan`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTransaksiItems(response.data);
@@ -88,7 +90,7 @@ const TransaksiStockPangan: React.FC = () => {
     if (!token) return;
     
     try {
-      const response = await axios.get('http://localhost:3000/distributor', {
+      const response = await axios.get(`${API_BASE_URL}/distributor`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDistributors(response.data);
@@ -102,7 +104,7 @@ const TransaksiStockPangan: React.FC = () => {
     if (!token) return;
     
     try {
-      const response = await axios.get('http://localhost:3000/komoditas-stock-pangan', {
+      const response = await axios.get(`${API_BASE_URL}/komoditas-stock-pangan`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setKomoditasItems(response.data);
@@ -151,10 +153,10 @@ const TransaksiStockPangan: React.FC = () => {
       const headers = { Authorization: `Bearer ${token}` };
       
       if (editingItem) {
-        await axios.patch(`http://localhost:3000/transaksi-stock-pangan/${editingItem.idTransaksi}`, formData, { headers });
+        await axios.patch(`${API_BASE_URL}/transaksi-stock-pangan/${editingItem.idTransaksi}`, formData, { headers });
         console.log('Transaksi berhasil diperbarui');
       } else {
-        await axios.post('http://localhost:3000/transaksi-stock-pangan', formData, { headers });
+        await axios.post(`${API_BASE_URL}/transaksi-stock-pangan`, formData, { headers });
         console.log('Transaksi berhasil ditambahkan');
       }
       
@@ -194,7 +196,7 @@ const TransaksiStockPangan: React.FC = () => {
       }
 
       try {
-        await axios.delete(`http://localhost:3000/transaksi-stock-pangan/${id}`, {
+        await axios.delete(`${API_BASE_URL}/transaksi-stock-pangan/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Transaksi berhasil dihapus');

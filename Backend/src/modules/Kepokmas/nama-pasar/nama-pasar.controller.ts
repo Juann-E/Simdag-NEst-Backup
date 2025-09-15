@@ -1,7 +1,4 @@
-import {
-  Controller, Get, Post, Body, Patch, Delete, Param,
-  UseGuards, UseInterceptors, UploadedFile
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -16,7 +13,9 @@ import { UserRole } from '../../../common/enums/user-role.enum';
 @Controller('nama-pasar')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class NamaPasarController {
-  constructor(private readonly namaPasarService: NamaPasarService) {}
+  constructor(
+    private readonly namaPasarService: NamaPasarService
+  ) {}
 
   @Post()
   @Roles(UserRole.ADMIN) // hanya admin
@@ -28,9 +27,20 @@ export class NamaPasarController {
         callback(null, uniqueSuffix + extname(file.originalname));
       },
     }),
+    fileFilter: (req, file, cb) => {
+      if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        return cb(new BadRequestException('Hanya file gambar yang diizinkan!'), false);
+      }
+      cb(null, true);
+    },
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB
+    },
   }))
-  create(@Body() dto: CreateNamaPasarDto, @UploadedFile() file?: Express.Multer.File) {
-    if (file) dto.gambar = file.path; // tambahkan path file ke DTO
+  async create(@Body() dto: CreateNamaPasarDto, @UploadedFile() file?: Express.Multer.File) {
+    if (file) {
+      dto.gambar = file.path;
+    }
     return this.namaPasarService.create(dto);
   }
 
@@ -50,9 +60,20 @@ export class NamaPasarController {
         callback(null, uniqueSuffix + extname(file.originalname));
       },
     }),
+    fileFilter: (req, file, cb) => {
+      if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        return cb(new BadRequestException('Hanya file gambar yang diizinkan!'), false);
+      }
+      cb(null, true);
+    },
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB
+    },
   }))
-  update(@Param('id') id: number, @Body() dto: UpdateNamaPasarDto, @UploadedFile() file?: Express.Multer.File) {
-    if (file) dto.gambar = file.path;
+  async update(@Param('id') id: string, @Body() dto: UpdateNamaPasarDto, @UploadedFile() file?: Express.Multer.File) {
+    if (file) {
+      dto.gambar = file.path;
+    }
     return this.namaPasarService.update(+id, dto);
   }
 

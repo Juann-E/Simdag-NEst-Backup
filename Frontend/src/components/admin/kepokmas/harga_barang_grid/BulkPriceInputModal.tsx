@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 // Definisikan tipe data yang lebih detail
 interface GridItem { id_barang_pasar: number; barang: { namaBarang: string; satuan: { satuanBarang: string } } }
 interface PriceInput { [key: number]: string }
@@ -28,7 +30,7 @@ export default function BulkPriceInputModal({ isOpen, onClose, marketId, marketN
       const fetchItems = async () => {
         const token = localStorage.getItem('accessToken');
         try {
-          const res = await axios.post('http://localhost:3000/barang-pasar-grid/filter', { idPasar: marketId }, { headers: { Authorization: `Bearer ${token}` } });
+          const res = await axios.post(`${API_BASE_URL}/barang-pasar-grid/filter`, { idPasar: marketId }, { headers: { Authorization: `Bearer ${token}` } });
           setGridItems(res.data);
           setPrices({});
         } catch (error) {
@@ -56,7 +58,7 @@ export default function BulkPriceInputModal({ isOpen, onClose, marketId, marketN
           harga: parseInt(harga),
           tanggal_harga: tanggal,
         };
-        return axios.post('http://localhost:3000/harga-barang-pasar', payload, { headers: { Authorization: `Bearer ${token}` } });
+        return axios.post(`${API_BASE_URL}/harga-barang-pasar`, payload, { headers: { Authorization: `Bearer ${token}` } });
       });
 
     try {

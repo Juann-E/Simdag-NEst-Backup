@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface MonthlyReportForm {
   monthYear: string;
 }
@@ -30,7 +32,7 @@ const ReportStockPangan: React.FC = () => {
     setIsDownloadingMonthly(true);
     try {
       const response = await axios.post(
-        'http://localhost:3000/stock-pangan/report/monthly-excel',
+        `${API_BASE_URL}/stock-pangan/report/monthly-excel`,
         {
           tahun: year,
           bulan: month

@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BbmLpgTabs from '../../components/admin/BbmLpgTabs';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 interface MonthlyReportForm {
   monthYear: string;
 }
@@ -35,7 +37,7 @@ export default function ReportAgenLpgPage() {
       const token = localStorage.getItem('accessToken');
       
       const response = await axios.get(
-        `http://localhost:3000/report-agen-lpg/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
+        `${API_BASE_URL}/report-agen-lpg/download-monthly?month=${parseInt(month)}&year=${parseInt(year)}`,
         {
           responseType: 'blob',
           headers: {
@@ -97,7 +99,7 @@ export default function ReportAgenLpgPage() {
       const token = localStorage.getItem('accessToken');
       
       const response = await axios.get(
-        `http://localhost:3000/report-agen-lpg/download-yearly?year=${parseInt(yearlyForm.year)}&kuota_mt=${parseFloat(yearlyForm.kuota_mt)}`,
+        `${API_BASE_URL}/report-agen-lpg/download-yearly?year=${parseInt(yearlyForm.year)}&kuota_mt=${parseFloat(yearlyForm.kuota_mt)}`,
         {
           responseType: 'blob',
           headers: {
