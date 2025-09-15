@@ -120,21 +120,28 @@ export default function NamaPasar() {
     const url = editingMarket 
       ? `${API_BASE_URL}/nama-pasar/${editingMarket.id}` 
       : `${API_BASE_URL}/nama-pasar`;
-    const method = editingMarket ? 'patch' : 'post';
+    const method = editingMarket ? 'PATCH' : 'POST';
 
     try {
-      await axios[method](url, data, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: data
       });
-      
-      fetchMarkets(); // Refresh data dari server
-      resetFormState(); // Reset form setelah berhasil submit
-      setIsFormModalOpen(false);
 
+      if (response.ok) {
+        fetchMarkets(); // Refresh data dari server
+        resetFormState(); // Reset form setelah berhasil submit
+        setIsFormModalOpen(false);
+      } else {
+        const errorData = await response.json();
+        alert(`Gagal menyimpan data: ${errorData.message || 'Gagal menyimpan data'}`);
+      }
     } catch (err: any) {
       console.error("Gagal menyimpan data:", err);
-      const errorMessage = err.response?.data?.message || err.message || "Gagal menyimpan data";
-      alert(`Gagal menyimpan data: ${errorMessage}`);
+      alert(`Gagal menyimpan data: ${err.message || 'Terjadi kesalahan saat menyimpan data'}`);
     }
   };
 

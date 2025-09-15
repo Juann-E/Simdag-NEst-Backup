@@ -137,17 +137,27 @@ export default function NamaBarang() {
       ? `${API_BASE_URL}/nama-barang/${editingItem.id}` 
       : `${API_BASE_URL}/nama-barang`;
       
-    const method = editingItem ? 'patch' : 'post';
+    const method = editingItem ? 'PATCH' : 'POST';
     
     try {
-      await axios[method](url, data, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: data
       });
-      fetchData(); 
-      setIsFormModalOpen(false);
-    } catch (err) {
+
+      if (response.ok) {
+        fetchData(); 
+        setIsFormModalOpen(false);
+      } else {
+        const errorData = await response.json();
+        alert(`Gagal menyimpan data: ${errorData.message || 'Gagal menyimpan data'}`);
+      }
+    } catch (err: any) {
       console.error("Gagal menyimpan data:", err);
-      alert("Gagal menyimpan data.");
+      alert(`Gagal menyimpan data: ${err.message || 'Terjadi kesalahan saat menyimpan data'}`);
     }
   };
 
