@@ -13,17 +13,37 @@ export class NamaPasarService {
   ) { }
 
   private parseCoordinate(input: string): { lat: number, lng: number } {
+    if (!input || typeof input !== 'string') {
+      throw new Error('Input koordinat tidak valid atau kosong');
+    }
+
     // buang spasi ekstra
-    const clean = input.replace(/\s+/g, '');
+    const clean = input.trim().replace(/\s+/g, '');
+    
+    if (!clean) {
+      throw new Error('Input koordinat kosong setelah dibersihkan');
+    }
 
     // cek kalau sudah decimal format: "-7.32,110.50"
     if (clean.includes(',')) {
       const parts = clean.split(',');
-      if (!parts[0].includes('°') && !parts[1].includes('°')) {
-        return {
-          lat: parseFloat(parts[0]),
-          lng: parseFloat(parts[1]),
-        };
+      if (parts.length === 2 && !parts[0].includes('°') && !parts[1].includes('°')) {
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        
+        if (isNaN(lat) || isNaN(lng)) {
+          throw new Error(`Koordinat decimal tidak valid: lat=${parts[0]}, lng=${parts[1]}`);
+        }
+        
+        // Validasi range koordinat
+        if (lat < -90 || lat > 90) {
+          throw new Error(`Latitude di luar range (-90 sampai 90): ${lat}`);
+        }
+        if (lng < -180 || lng > 180) {
+          throw new Error(`Longitude di luar range (-180 sampai 180): ${lng}`);
+        }
+        
+        return { lat, lng };
       }
     }
 
@@ -31,7 +51,7 @@ export class NamaPasarService {
     const dmsToDecimal = (dms: string): number => {
       const regex = /(\d+)°(\d+)'([\d.]+)"?([NSEW])/;
       const match = dms.match(regex);
-      if (!match) throw new Error(`Format koordinat tidak valid: ${dms}`);
+      if (!match) throw new Error(`Format koordinat DMS tidak valid: ${dms}`);
 
       const [, deg, min, sec, dir] = match;
       let decimal = Number(deg) + Number(min) / 60 + Number(sec) / 3600;
@@ -42,16 +62,18 @@ export class NamaPasarService {
     // kalau ada koma berarti format DMS pakai pemisah koma
     if (clean.includes(',')) {
       const [latStr, lngStr] = clean.split(',');
-      return { lat: dmsToDecimal(latStr), lng: dmsToDecimal(lngStr) };
+      if (latStr && lngStr) {
+        return { lat: dmsToDecimal(latStr), lng: dmsToDecimal(lngStr) };
+      }
     }
 
     // kalau tidak ada koma → asumsikan dipisah dengan spasi
-    const parts = clean.split(/(?=[NSWE])/); // potong di huruf arah
+    const parts = clean.split(/(?=[NSWE])/);
     if (parts.length === 2) {
       return { lat: dmsToDecimal(parts[0]), lng: dmsToDecimal(parts[1]) };
     }
 
-    throw new Error(`Format koordinat tidak dikenali: ${input}`);
+    throw new Error(`Format koordinat tidak dikenali: "${input}". Gunakan format decimal (-7.32,110.50) atau DMS (7°19'48"S,110°30'18"E)`);
   }
 
 
@@ -59,10 +81,17 @@ export class NamaPasarService {
     const pasar = this.namaPasarRepo.create(dto);
 
     // parsing koordinat jika ada
-    if (dto.koordinat) {
-      const { lat, lng } = this.parseCoordinate(dto.koordinat);
-      pasar.latitude = lat;
-      pasar.longitude = lng;
+    if (dto.koordinat && dto.koordinat.trim()) {
+      try {
+        const { lat, lng } = this.parseCoordinate(dto.koordinat);
+        pasar.latitude = lat;
+        pasar.longitude = lng;
+        console.log(`✅ Koordinat berhasil diparse: lat=${lat}, lng=${lng}`);
+      } catch (error) {
+        console.error(`❌ Error parsing koordinat "${dto.koordinat}":`, error.message);
+        // Jangan throw error, biarkan data tersimpan tanpa koordinat
+        console.log('⚠️ Data akan disimpan tanpa koordinat');
+      }
     }
 
     return this.namaPasarRepo.save(pasar);
@@ -72,10 +101,17 @@ export class NamaPasarService {
     const pasar = await this.findOne(id);
     Object.assign(pasar, dto);
 
-    if (dto.koordinat) {
-      const { lat, lng } = this.parseCoordinate(dto.koordinat);
-      pasar.latitude = lat;
-      pasar.longitude = lng;
+    if (dto.koordinat && dto.koordinat.trim()) {
+      try {
+        const { lat, lng } = this.parseCoordinate(dto.koordinat);
+        pasar.latitude = lat;
+        pasar.longitude = lng;
+        console.log(`✅ Koordinat berhasil diparse: lat=${lat}, lng=${lng}`);
+      } catch (error) {
+        console.error(`❌ Error parsing koordinat "${dto.koordinat}":`, error.message);
+        // Jangan throw error, biarkan data tersimpan tanpa koordinat
+        console.log('⚠️ Data akan disimpan tanpa koordinat');
+      }
     }
 
     return this.namaPasarRepo.save(pasar);
