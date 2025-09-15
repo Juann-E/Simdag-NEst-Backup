@@ -74,7 +74,7 @@ import { PublicModule } from './common/public/public.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads', // URL prefix
-      exclude: ['/api*', '/public*'], // Exclude API routes
+      exclude: ['/api/(.*)', '/public/(.*)'], // Exclude API routes
     }),
 
     // Core application modules
