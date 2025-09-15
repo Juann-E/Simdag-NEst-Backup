@@ -107,10 +107,12 @@ export default function NamaPasar() {
     if (!token) { alert("Sesi berakhir, silakan login kembali."); return; }
 
     const data = new FormData();
-    // 5. Kirim 'koordinat' sebagai satu string
     data.append('nama_pasar', formData.nama_pasar);
     data.append('alamat', formData.alamat);
-    data.append('koordinat', formData.koordinat); // Kirim field koordinat
+    // Hanya kirim koordinat jika tidak kosong
+    if (formData.koordinat && formData.koordinat.trim() !== '') {
+      data.append('koordinat', formData.koordinat.trim());
+    }
     if (selectedFile) {
       data.append('gambar', selectedFile);
     }
@@ -121,20 +123,18 @@ export default function NamaPasar() {
     const method = editingMarket ? 'patch' : 'post';
 
     try {
-      const response = await axios[method](url, data, {
+      await axios[method](url, data, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      if (editingMarket) {
-        setMarkets(markets.map(m => m.id === editingMarket.id ? response.data : m));
-      } else {
-        setMarkets([...markets, response.data]);
-      }
+      
+      fetchMarkets(); // Refresh data dari server
+      resetFormState(); // Reset form setelah berhasil submit
       setIsFormModalOpen(false);
 
-    } catch (err) {
+    } catch (err: any) {
       console.error("Gagal menyimpan data:", err);
-      alert("Gagal menyimpan data. Periksa kembali input Anda.");
+      const errorMessage = err.response?.data?.message || err.message || "Gagal menyimpan data";
+      alert(`Gagal menyimpan data: ${errorMessage}`);
     }
   };
 
