@@ -1,0 +1,212 @@
+BREAKDOWN MODULE APLIKASI SIMDAG (SISTEM INFORMASI PERDAGANGAN)
+================================================================
+
+OVERVIEW APLIKASI:
+SIMDAG adalah sistem informasi perdagangan yang mengelola data komoditas pangan, BBM, LPG, dan SPBU/Agen di wilayah Salatiga.
+
+=== BACKEND MODULES ===
+
+1. AUTHENTICATION & USER MANAGEMENT
+   - Module: auth/, user/
+   - Fitur: Login, logout, manajemen user, role-based access
+   - Teknologi: JWT, bcrypt, NestJS Guards
+
+2. BBM (BAHAN BAKAR MINYAK) MANAGEMENT
+   a. Jenis BBM Module
+      - Path: modules/BBM/JenisBbm/
+      - Fitur: CRUD jenis BBM (Pertalite, Pertamax, Solar, dll)
+      
+   b. Realisasi BBM Module
+      - Path: modules/BBM/Realisasi BBM/
+      - Fitur: Input dan tracking realisasi penjualan BBM bulanan
+      - Entity: realisasi-bulanan-bbm, realisasi-bulanan-bbm-detail
+      
+   c. Realisasi LPG Module
+      - Path: modules/BBM/Realisasi LPG/
+      - Fitur: Input dan tracking realisasi penjualan LPG bulanan
+      - Entity: realisasi-bulanan-lpg, realisasi-bulanan-lpg-detail
+      
+   d. Report Agen LPG Module
+      - Path: modules/BBM/Report Agen LPG/
+      - Fitur: Generate laporan agen LPG (bulanan & tahunan)
+      - Output: Excel files, JSON data untuk chart
+      
+   e. Report BBM Module
+      - Path: modules/BBM/Report BBM/
+      - Fitur: Generate laporan BBM
+
+3. KEPOKMAS (KETAHANAN PANGAN & KOMODITAS)
+   a. Nama Pasar Module
+      - Path: modules/Kepokmas/nama-pasar/
+      - Fitur: CRUD data pasar tradisional
+      
+   b. Nama Barang Module
+      - Path: modules/Kepokmas/nama-barang/
+      - Fitur: CRUD master data barang/komoditas
+      
+   c. Satuan Barang Module
+      - Path: modules/Kepokmas/satuan-barang/
+      - Fitur: CRUD satuan barang (kg, liter, dll)
+      
+   d. Barang Pasar Grid Module
+      - Path: modules/Kepokmas/barang-pasar-grid/
+      - Fitur: Mapping barang ke pasar tertentu
+      
+   e. Harga Barang Pasar Module
+      - Path: modules/Kepokmas/harga-barang-grid/
+      - Fitur: Input dan tracking harga barang per pasar
+      
+   f. Report Kepokmas Module
+      - Path: modules/Kepokmas/report/
+      - Fitur: Generate laporan harga komoditas
+
+4. SPBU & LPG MANAGEMENT
+   a. SPBU Module
+      - Path: modules/SPBU_LPG/SPBU/
+      - Fitur: CRUD data SPBU (Stasiun Pengisian Bahan Bakar Umum)
+      
+   b. Agen Module
+      - Path: modules/SPBU_LPG/Agen/
+      - Fitur: CRUD data agen LPG
+      
+   c. Pangkalan LPG Module
+      - Path: modules/SPBU_LPG/PangkalanLpg/
+      - Fitur: CRUD data pangkalan LPG
+      
+   d. SPBE Module
+      - Path: modules/SPBU_LPG/Spbe/
+      - Fitur: CRUD data SPBE (Stasiun Pengisian Bahan Bakar Elektrik)
+
+5. STOCK PANGAN MANAGEMENT
+   a. Komoditas Module
+      - Path: modules/StockPangan/Komoditas/
+      - Fitur: CRUD master komoditas pangan
+      
+   b. Distributor Module
+      - Path: modules/StockPangan/Distributor/
+      - Fitur: CRUD data distributor
+      
+   c. Satuan Barang Module
+      - Path: modules/StockPangan/SatuanBarang/
+      - Fitur: CRUD satuan untuk stock pangan
+      
+   d. Transaksi Stock Pangan Module
+      - Path: modules/StockPangan/TransaksiStockPangan/
+      - Fitur: Input transaksi masuk/keluar stock pangan
+      
+   e. Report Stock Pangan Module
+      - Path: modules/stock-pangan/report/
+      - Fitur: Generate laporan stock pangan
+
+6. SETTING & MASTER DATA
+   a. Kecamatan Module
+      - Path: modules/Setting/Kecamatan/
+      - Fitur: CRUD data kecamatan
+      
+   b. Kelurahan Module
+      - Path: modules/Setting/Kelurahan/
+      - Fitur: CRUD data kelurahan
+
+7. TEAM PHOTOS MODULE
+   - Path: modules/team-photos/
+   - Fitur: Upload dan manage foto tim
+
+=== FRONTEND PAGES ===
+
+1. PUBLIC PAGES
+   - LoginPage.tsx: Halaman login
+   - MarketListPage.tsx: Daftar pasar (public view)
+   - MarketDetailPage.tsx: Detail pasar dan harga komoditas
+   - StockPanganListPage.tsx: Daftar stock pangan (public view)
+   - StockPanganDetailPage.tsx: Detail stock pangan
+   - TentangPage.tsx: Halaman tentang aplikasi
+
+2. ADMIN PAGES
+   - DashboardPage.tsx: Dashboard admin dengan statistik
+   - KepokmasPage.tsx: Manajemen data kepokmas
+   - BbmLpgPage.tsx: Manajemen data BBM & LPG
+   - SpbuLpgPage.tsx: Manajemen SPBU & Agen LPG
+   - StockPanganPage.tsx: Manajemen stock pangan
+   - ReportAgenLpgPage.tsx: Generate laporan agen LPG
+   - SettingsPage.tsx: Pengaturan aplikasi
+   - stock-pangan/ReportStockPangan.tsx: Laporan stock pangan
+   - stock-pangan/TransaksiStockPangan.tsx: Input transaksi stock
+
+=== TEKNOLOGI YANG DIGUNAKAN ===
+
+BACKEND:
+- Framework: NestJS (Node.js)
+- Database: MySQL
+- ORM: TypeORM
+- Authentication: JWT
+- File Processing: ExcelJS (untuk generate Excel)
+- Validation: class-validator, class-transformer
+
+FRONTEND:
+- Framework: React + TypeScript
+- Build Tool: Vite
+- Styling: Tailwind CSS
+- Charts: Recharts
+- HTTP Client: Axios
+- Routing: React Router DOM
+
+DATABASE:
+- MySQL untuk production
+- Struktur relational dengan foreign keys
+- Migrasi database menggunakan TypeORM
+
+DEPLOYMENT:
+- Backend: PM2 + Nginx (Ubuntu Server)
+- Frontend: Netlify
+- Database: MySQL Server
+
+=== FITUR UTAMA APLIKASI ===
+
+1. MANAJEMEN DATA MASTER
+   - Pasar, Barang, Satuan, Kecamatan, Kelurahan
+   - SPBU, Agen LPG, Pangkalan LPG, SPBE
+   - Komoditas, Distributor
+
+2. INPUT DATA TRANSAKSI
+   - Harga barang per pasar
+   - Realisasi penjualan BBM & LPG
+   - Transaksi stock pangan
+
+3. REPORTING & ANALYTICS
+   - Laporan harga komoditas
+   - Laporan realisasi BBM & LPG (Excel + Chart)
+   - Laporan stock pangan
+   - Dashboard dengan visualisasi data
+
+4. USER MANAGEMENT
+   - Role-based access (admin)
+   - Authentication dengan JWT
+   - Session management
+
+5. PUBLIC ACCESS
+   - View harga pasar tanpa login
+   - View stock pangan tanpa login
+   - Responsive design untuk mobile
+
+=== ARSITEKTUR SISTEM ===
+
+1. BACKEND ARCHITECTURE
+   - Modular architecture dengan NestJS
+   - Repository pattern dengan TypeORM
+   - DTO untuk validation
+   - Guard untuk authentication & authorization
+   - Service layer untuk business logic
+
+2. FRONTEND ARCHITECTURE
+   - Component-based dengan React
+   - Custom hooks untuk state management
+   - Axios interceptors untuk API calls
+   - Protected routes untuk admin pages
+
+3. DATABASE DESIGN
+   - Normalized relational database
+   - Foreign key constraints
+   - Indexing untuk performance
+   - Migration scripts untuk deployment
+
+Aplikasi ini dirancang untuk membantu Dinas Perdagangan Kota Salatiga dalam mengelola dan memantau data perdagangan, harga komoditas, serta distribusi BBM dan LPG di wilayah Salatiga.

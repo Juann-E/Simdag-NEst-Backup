@@ -1,0 +1,361 @@
+BREAKDOWN HARGA PENGEMBANGAN APLIKASI SIMDAG
+============================================
+Sistem Informasi Perdagangan Kota Salatiga
+
+=== ESTIMASI BIAYA PENGEMBANGAN ===
+
+METODOLOGI PERHITUNGAN:
+- Berdasarkan kompleksitas fitur dan waktu pengembangan
+- Menggunakan rate developer junior-mid level
+- Termasuk testing dan dokumentasi
+- Harga dalam Rupiah (IDR)
+
+RATE DEVELOPER:
+- Junior Developer: Rp 150.000/hari
+- Mid Developer: Rp 250.000/hari  
+- Senior Developer: Rp 400.000/hari
+- UI/UX Designer: Rp 200.000/hari
+- Project Manager: Rp 300.000/hari
+
+=== BREAKDOWN BIAYA PER MODULE ===
+
+1. AUTHENTICATION & USER MANAGEMENT
+   Kompleksitas: Medium
+   Waktu Pengembangan: 5 hari
+   Developer: 1 Mid Developer
+   
+   Detail Pekerjaan:
+   - JWT Authentication system
+   - Login/logout functionality
+   - User roles & permissions
+   - Password hashing & security
+   - Session management
+   
+   Biaya: 5 hari × Rp 250.000 = Rp 1.250.000
+
+2. DASHBOARD ADMIN
+   Kompleksitas: Medium-High
+   Waktu Pengembangan: 8 hari
+   Developer: 1 Mid Developer + 1 UI/UX Designer (2 hari)
+   
+   Detail Pekerjaan:
+   - Dashboard layout design
+   - Statistics widgets
+   - Chart integration (Recharts)
+   - Responsive design
+   - Data aggregation API
+   
+   Biaya: 
+   - Developer: 8 hari × Rp 250.000 = Rp 2.000.000
+   - Designer: 2 hari × Rp 200.000 = Rp 400.000
+   Total: Rp 2.400.000
+
+3. MODULE KEPOKMAS (Ketahanan Pangan & Komoditas)
+   Kompleksitas: High
+   Waktu Pengembangan: 15 hari
+   Developer: 1 Senior Developer + 1 Mid Developer (5 hari)
+   
+   Detail Pekerjaan:
+   - Master data management (pasar, barang, satuan)
+   - CRUD operations untuk semua entitas
+   - Mapping barang-pasar dengan grid system
+   - Input harga harian dengan validasi
+   - Laporan dan export Excel
+   - Public API untuk akses tanpa login
+   
+   Biaya:
+   - Senior Developer: 15 hari × Rp 400.000 = Rp 6.000.000
+   - Mid Developer: 5 hari × Rp 250.000 = Rp 1.250.000
+   Total: Rp 7.250.000
+
+4. MODULE BBM & LPG
+   Kompleksitas: High
+   Waktu Pengembangan: 12 hari
+   Developer: 1 Senior Developer + 1 Junior Developer (4 hari)
+   
+   Detail Pekerjaan:
+   - Master data BBM dan LPG
+   - Input realisasi bulanan
+   - Validasi data dan business logic
+   - Generate laporan Excel dengan template
+   - Chart visualization
+   - Download functionality
+   
+   Biaya:
+   - Senior Developer: 12 hari × Rp 400.000 = Rp 4.800.000
+   - Junior Developer: 4 hari × Rp 150.000 = Rp 600.000
+   Total: Rp 5.400.000
+
+5. MODULE SPBU & AGEN LPG
+   Kompleksitas: Medium
+   Waktu Pengembangan: 8 hari
+   Developer: 1 Mid Developer + 1 Junior Developer (3 hari)
+   
+   Detail Pekerjaan:
+   - Master data SPBU
+   - Master data Agen LPG
+   - Master data Pangkalan LPG
+   - Master data SPBE
+   - CRUD operations
+   - Integration dengan module BBM/LPG
+   
+   Biaya:
+   - Mid Developer: 8 hari × Rp 250.000 = Rp 2.000.000
+   - Junior Developer: 3 hari × Rp 150.000 = Rp 450.000
+   Total: Rp 2.450.000
+
+6. MODULE STOCK PANGAN
+   Kompleksitas: High
+   Waktu Pengembangan: 10 hari
+   Developer: 1 Senior Developer + 1 Junior Developer (3 hari)
+   
+   Detail Pekerjaan:
+   - Master data komoditas dan distributor
+   - Transaksi stock masuk/keluar
+   - Inventory tracking system
+   - Stock monitoring dan alerts
+   - Laporan stock dan movement
+   - Public API untuk stock info
+   
+   Biaya:
+   - Senior Developer: 10 hari × Rp 400.000 = Rp 4.000.000
+   - Junior Developer: 3 hari × Rp 150.000 = Rp 450.000
+   Total: Rp 4.450.000
+
+7. MASTER DATA & SETTINGS
+   Kompleksitas: Medium
+   Waktu Pengembangan: 6 hari
+   Developer: 1 Mid Developer
+   
+   Detail Pekerjaan:
+   - Master data kecamatan & kelurahan
+   - System settings
+   - User management
+   - Configuration management
+   - Data seeding
+   
+   Biaya: 6 hari × Rp 250.000 = Rp 1.500.000
+
+8. PUBLIC PAGES & API
+   Kompleksitas: Medium
+   Waktu Pengembangan: 7 hari
+   Developer: 1 Mid Developer + 1 UI/UX Designer (2 hari)
+   
+   Detail Pekerjaan:
+   - Public landing pages
+   - Market price display
+   - Stock information display
+   - Mobile responsive design
+   - SEO optimization
+   - Public API endpoints
+   
+   Biaya:
+   - Developer: 7 hari × Rp 250.000 = Rp 1.750.000
+   - Designer: 2 hari × Rp 200.000 = Rp 400.000
+   Total: Rp 2.150.000
+
+9. REPORTING & ANALYTICS
+   Kompleksitas: High
+   Waktu Pengembangan: 8 hari
+   Developer: 1 Senior Developer
+   
+   Detail Pekerjaan:
+   - Excel export functionality
+   - PDF report generation
+   - Chart dan visualization
+   - Data aggregation
+   - Report scheduling
+   - Email notifications
+   
+   Biaya: 8 hari × Rp 400.000 = Rp 3.200.000
+
+10. DATABASE DESIGN & MIGRATION
+    Kompleksitas: Medium-High
+    Waktu Pengembangan: 5 hari
+    Developer: 1 Senior Developer
+    
+    Detail Pekerjaan:
+    - Database schema design
+    - Migration scripts
+    - Indexing optimization
+    - Data relationships
+    - Seeder untuk initial data
+    
+    Biaya: 5 hari × Rp 400.000 = Rp 2.000.000
+
+=== BIAYA TAMBAHAN ===
+
+11. TESTING & QA
+    Waktu: 10 hari
+    Developer: 1 Mid Developer
+    
+    Detail:
+    - Unit testing
+    - Integration testing
+    - Manual testing
+    - Bug fixing
+    - Performance testing
+    
+    Biaya: 10 hari × Rp 250.000 = Rp 2.500.000
+
+12. DEPLOYMENT & DEVOPS
+    Waktu: 3 hari
+    Developer: 1 Senior Developer
+    
+    Detail:
+    - Server setup
+    - CI/CD pipeline
+    - SSL configuration
+    - Domain setup
+    - Monitoring setup
+    
+    Biaya: 3 hari × Rp 400.000 = Rp 1.200.000
+
+13. PROJECT MANAGEMENT
+    Waktu: 20 hari (paralel dengan development)
+    Project Manager: 1 orang
+    
+    Detail:
+    - Project planning
+    - Progress monitoring
+    - Client communication
+    - Documentation
+    - Risk management
+    
+    Biaya: 20 hari × Rp 300.000 = Rp 6.000.000
+
+14. DOCUMENTATION & TRAINING
+    Waktu: 5 hari
+    Developer: 1 Mid Developer
+    
+    Detail:
+    - Technical documentation
+    - User manual
+    - API documentation
+    - Training materials
+    - Knowledge transfer
+    
+    Biaya: 5 hari × Rp 250.000 = Rp 1.250.000
+
+=== TOTAL ESTIMASI BIAYA ===
+
+BIAYA DEVELOPMENT PER MODULE:
+1. Authentication & User Management: Rp 1.250.000
+2. Dashboard Admin: Rp 2.400.000
+3. Module Kepokmas: Rp 7.250.000
+4. Module BBM & LPG: Rp 5.400.000
+5. Module SPBU & Agen LPG: Rp 2.450.000
+6. Module Stock Pangan: Rp 4.450.000
+7. Master Data & Settings: Rp 1.500.000
+8. Public Pages & API: Rp 2.150.000
+9. Reporting & Analytics: Rp 3.200.000
+10. Database Design & Migration: Rp 2.000.000
+
+SUBTOTAL DEVELOPMENT: Rp 32.050.000
+
+BIAYA TAMBAHAN:
+11. Testing & QA: Rp 2.500.000
+12. Deployment & DevOps: Rp 1.200.000
+13. Project Management: Rp 6.000.000
+14. Documentation & Training: Rp 1.250.000
+
+SUBTOTAL TAMBAHAN: Rp 11.950.000
+
+TOTAL KESELURUHAN: Rp 44.000.000
+
+=== BREAKDOWN BERDASARKAN FASE ===
+
+FASE 1 - FOUNDATION (25% dari total)
+- Authentication system
+- Database design
+- Basic CRUD operations
+- Estimasi: Rp 11.000.000
+- Waktu: 3-4 minggu
+
+FASE 2 - CORE MODULES (50% dari total)
+- Module Kepokmas
+- Module BBM & LPG
+- Module Stock Pangan
+- Estimasi: Rp 22.000.000
+- Waktu: 6-8 minggu
+
+FASE 3 - ADVANCED FEATURES (25% dari total)
+- Dashboard & Analytics
+- Reporting system
+- Public pages
+- Testing & Deployment
+- Estimasi: Rp 11.000.000
+- Waktu: 3-4 minggu
+
+TOTAL WAKTU PENGEMBANGAN: 12-16 minggu (3-4 bulan)
+
+=== OPSI PAKET PENGEMBANGAN ===
+
+PAKET BASIC (Rp 30.000.000):
+- Fitur core tanpa advanced analytics
+- Basic reporting
+- Minimal UI/UX design
+- Standard testing
+
+PAKET STANDARD (Rp 44.000.000):
+- Semua fitur lengkap
+- Advanced reporting & analytics
+- Professional UI/UX design
+- Comprehensive testing
+- Documentation lengkap
+
+PAKET PREMIUM (Rp 60.000.000):
+- Semua fitur standard
+- Mobile app version
+- Advanced security features
+- Real-time notifications
+- 6 bulan maintenance support
+- Training intensif
+
+=== MAINTENANCE & SUPPORT ===
+
+BIAYA MAINTENANCE TAHUNAN:
+- Bug fixes & minor updates: Rp 6.000.000/tahun
+- Feature enhancements: Rp 12.000.000/tahun
+- Server & hosting: Rp 3.600.000/tahun
+- Technical support: Rp 4.800.000/tahun
+
+TOTAL MAINTENANCE: Rp 26.400.000/tahun
+
+=== CATATAN PENTING ===
+
+1. Harga dapat berubah berdasarkan:
+   - Kompleksitas requirement yang detail
+   - Perubahan scope selama development
+   - Timeline yang diminta client
+   - Kualitas dan experience developer
+
+2. Estimasi waktu sudah termasuk:
+   - Analysis & design
+   - Development & coding
+   - Testing & debugging
+   - Documentation
+
+3. Tidak termasuk:
+   - Server hosting cost
+   - Domain & SSL certificate
+   - Third-party service integration
+   - Hardware requirements
+
+4. Payment terms:
+   - 30% down payment
+   - 40% saat 50% progress
+   - 30% saat delivery & acceptance
+
+=== REKOMENDASI ===
+
+Untuk project SIMDAG ini, direkomendasikan menggunakan PAKET STANDARD dengan total investasi Rp 44.000.000 yang sudah mencakup semua fitur yang dibutuhkan untuk sistem informasi perdagangan yang komprehensif.
+
+Investasi ini akan menghasilkan sistem yang dapat:
+- Meningkatkan efisiensi operasional Dinas Perdagangan
+- Memberikan data real-time untuk pengambilan keputusan
+- Meningkatkan transparansi informasi ke masyarakat
+- Mengotomatisasi proses pelaporan
+- Menyediakan analytics untuk strategic planning
+
+ROI (Return on Investment) diperkirakan dapat tercapai dalam 12-18 bulan melalui peningkatan efisiensi operasional dan pengurangan biaya administrasi manual.

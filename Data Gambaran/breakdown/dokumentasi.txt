@@ -1,0 +1,286 @@
+DOKUMENTASI APLIKASI SIMDAG
+===========================
+Sistem Informasi Perdagangan Kota Salatiga
+
+=== INFORMASI UMUM ===
+
+Nama Aplikasi: SIMDAG (Sistem Informasi Perdagangan)
+Versi: 1.0
+Klien: Dinas Perdagangan Kota Salatiga
+Developer: Tim Magang P1 Perdagangan
+Tanggal: 2025
+
+=== DESKRIPSI APLIKASI ===
+
+SIMDAG adalah sistem informasi berbasis web yang dirancang untuk membantu Dinas Perdagangan Kota Salatiga dalam:
+1. Memantau harga komoditas pangan di pasar tradisional
+2. Mengelola data distribusi BBM dan LPG
+3. Memantau stock pangan di distributor
+4. Menghasilkan laporan dan analisis data perdagangan
+
+=== FITUR UTAMA ===
+
+1. DASHBOARD ADMIN
+   - Overview statistik perdagangan
+   - Grafik harga komoditas
+   - Monitoring stock pangan
+   - Quick access ke semua modul
+
+2. MANAJEMEN KEPOKMAS (Ketahanan Pangan & Komoditas)
+   - Input dan update harga barang di pasar
+   - Manajemen data pasar tradisional
+   - Master data barang dan satuan
+   - Laporan fluktuasi harga
+
+3. MANAJEMEN BBM & LPG
+   - Input realisasi penjualan BBM bulanan
+   - Input realisasi penjualan LPG bulanan
+   - Generate laporan Excel
+   - Visualisasi data dengan chart
+
+4. MANAJEMEN SPBU & AGEN LPG
+   - Data SPBU (Stasiun Pengisian Bahan Bakar Umum)
+   - Data Agen LPG
+   - Data Pangkalan LPG
+   - Data SPBE (Stasiun Pengisian Bahan Bakar Elektrik)
+
+5. MANAJEMEN STOCK PANGAN
+   - Input transaksi stock masuk/keluar
+   - Data distributor
+   - Laporan stock pangan
+   - Monitoring ketersediaan pangan
+
+6. AKSES PUBLIC
+   - View harga pasar tanpa login
+   - Informasi stock pangan
+   - Responsive untuk mobile
+
+=== PANDUAN INSTALASI ===
+
+REQUIREMENTS:
+- Node.js 18+
+- MySQL 8.0+
+- Git
+
+BACKEND SETUP:
+1. Clone repository
+2. cd Backend
+3. npm install
+4. Copy .env.example ke .env
+5. Konfigurasi database di .env
+6. npm run migration:run
+7. npm start
+
+FRONTEND SETUP:
+1. cd Frontend
+2. yarn install
+3. Copy .env.example ke .env
+4. Konfigurasi API URL di .env
+5. yarn dev
+
+DATABASE SETUP:
+1. Buat database MySQL
+2. Import struktur dari migrations
+3. Jalankan seeder untuk data awal
+
+=== PANDUAN PENGGUNAAN ===
+
+LOGIN ADMIN:
+- URL: /login
+- Username: admin
+- Password: 123
+
+NAVIGASI UTAMA:
+1. Dashboard - Overview sistem
+2. Kepokmas - Manajemen harga komoditas
+3. BBM & LPG - Input realisasi penjualan
+4. SPBU & LPG - Data outlet penjualan
+5. Stock Pangan - Manajemen stock distributor
+6. Settings - Pengaturan sistem
+
+WORKFLOW KEPOKMAS:
+1. Setup master data (pasar, barang, satuan)
+2. Mapping barang ke pasar
+3. Input harga harian
+4. Generate laporan
+
+WORKFLOW BBM/LPG:
+1. Setup data SPBU/Agen
+2. Input realisasi bulanan
+3. Generate laporan Excel
+4. View chart analisis
+
+WORKFLOW STOCK PANGAN:
+1. Setup data distributor & komoditas
+2. Input transaksi stock
+3. Monitor ketersediaan
+4. Generate laporan
+
+=== API DOCUMENTATION ===
+
+BASE URL: http://localhost:3000
+
+AUTHENTICATION:
+- POST /auth/login - Login user
+- Headers: Authorization: Bearer {token}
+
+KEPOKMAS ENDPOINTS:
+- GET /nama-pasar - List pasar
+- POST /nama-pasar - Create pasar
+- GET /nama-barang - List barang
+- POST /harga-barang-pasar - Input harga
+
+BBM/LPG ENDPOINTS:
+- GET /jenis-bbm - List jenis BBM
+- POST /realisasi-bulanan-bbm - Input realisasi BBM
+- POST /realisasi-bulanan-lpg - Input realisasi LPG
+- GET /report-agen-lpg/download-monthly - Download laporan
+
+STOCK PANGAN ENDPOINTS:
+- GET /komoditas - List komoditas
+- POST /transaksi-stock-pangan - Input transaksi
+- GET /stock-pangan/report - Generate laporan
+
+PUBLIC ENDPOINTS:
+- GET /public/pasar - List pasar (public)
+- GET /public/harga-barang - Harga barang (public)
+- GET /public/stock-pangan - Stock pangan (public)
+
+=== DATABASE SCHEMA ===
+
+KEPOKMAS TABLES:
+- nama_pasar: Data pasar tradisional
+- nama_barang: Master data barang
+- satuan_barang: Master satuan
+- barang_pasar_grid: Mapping barang-pasar
+- harga_barang_pasar: Data harga harian
+
+BBM/LPG TABLES:
+- jenis_bbm: Master jenis BBM
+- spbu: Data SPBU
+- agen: Data agen LPG
+- realisasi_bulanan_bbm: Realisasi BBM
+- realisasi_bulanan_lpg: Realisasi LPG
+
+STOCK PANGAN TABLES:
+- komoditas: Master komoditas pangan
+- distributor: Data distributor
+- transaksi_stock_pangan: Transaksi stock
+
+MASTER TABLES:
+- kecamatan: Data kecamatan
+- kelurahan: Data kelurahan
+- users: Data user sistem
+
+=== TROUBLESHOOTING ===
+
+MASALAH UMUM:
+
+1. Error Database Connection
+   - Cek konfigurasi .env
+   - Pastikan MySQL service running
+   - Cek username/password database
+
+2. Error 404 API
+   - Cek URL endpoint
+   - Pastikan backend service running
+   - Cek CORS configuration
+
+3. Error Authentication
+   - Cek token validity
+   - Login ulang jika token expired
+   - Cek header Authorization
+
+4. Error File Upload
+   - Cek folder permissions
+   - Cek file size limit
+   - Cek file type validation
+
+5. Error Chart Tidak Muncul
+   - Cek data API response
+   - Cek console browser untuk error
+   - Pastikan library recharts terinstall
+
+=== MAINTENANCE ===
+
+BACKUP DATABASE:
+- Rutin backup database MySQL
+- Export data penting secara berkala
+- Simpan backup di lokasi aman
+
+UPDATE APLIKASI:
+- Pull latest code dari repository
+- Jalankan migration jika ada perubahan DB
+- Restart service backend
+- Clear cache browser
+
+MONITORING:
+- Monitor log aplikasi
+- Cek performance database
+- Monitor disk space server
+- Cek SSL certificate validity
+
+=== SECURITY ===
+
+AUTHENTICATION:
+- JWT token dengan expiry time
+- Password hashing dengan bcrypt
+- Role-based access control
+
+DATA PROTECTION:
+- Input validation & sanitization
+- SQL injection prevention
+- XSS protection
+- CORS configuration
+
+SERVER SECURITY:
+- HTTPS only in production
+- Firewall configuration
+- Regular security updates
+- Access log monitoring
+
+=== DEPLOYMENT ===
+
+PRODUCTION SETUP:
+1. Setup Ubuntu server
+2. Install Node.js, MySQL, Nginx
+3. Clone repository
+4. Setup environment variables
+5. Run database migrations
+6. Configure PM2 for backend
+7. Build frontend untuk production
+8. Configure Nginx reverse proxy
+9. Setup SSL certificate
+10. Configure domain DNS
+
+MONITORING TOOLS:
+- PM2 untuk process management
+- Nginx untuk web server
+- MySQL untuk database
+- Log files untuk debugging
+
+=== CONTACT & SUPPORT ===
+
+Developer Team: Tim Magang P1 Perdagangan
+Email: [email developer]
+Repository: [link repository]
+Documentation: [link dokumentasi]
+
+Untuk pertanyaan teknis atau bug report, silakan hubungi tim developer atau buat issue di repository.
+
+=== CHANGELOG ===
+
+Version 1.0 (2025):
+- Initial release
+- Semua fitur dasar implementasi
+- Authentication system
+- Reporting features
+- Public access pages
+- Responsive design
+
+Future Updates:
+- Mobile app version
+- Advanced analytics
+- Real-time notifications
+- Integration dengan sistem lain
+- Performance optimization
