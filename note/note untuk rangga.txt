@@ -172,23 +172,3 @@ Breakdown cara kerja
             nama spbu, lalu dibuat chart 
             X: bulan
             Y: Jumlah realisasi per jenis bbm (jadi ada beberapa garis dalam 1 chart)
-
-
-            # JWT
-JWT_SECRET=G7Nhuq+I3oJSrOCImhKINhcHL0Y=
-JWT_EXPIRES=1h
-
-# AES
-AES_KEY=a976c9345103181c5802ec246edfc8d295407ec0c15e6eda4ccc1dd0a7497b75
-AES_IV=822719213a979ee7d4f433618fcc7c06
-
-# Database
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASS=
-DB_NAME=simdag_main_db
-# DB_TYPE=mysql
-
-# NODE_VERSION 
-NODE_VERSION=20
